@@ -1,0 +1,74 @@
+{
+  "version": "AICTE-APH-2026.1",
+  "effectiveFrom": "2026-04-01",
+  "source": "AICTE Approval Process Handbook 2026-27 (demonstration extract)",
+  "rules": [
+    {
+      "code": "APH_2026_SFR",
+      "title": "Student-Faculty Ratio",
+      "category": "FACULTY",
+      "severity": "CRITICAL",
+      "weight": 0.28,
+      "description": "One full-time faculty member for every 20 students of sanctioned intake (1:15 where the programme is accredited).",
+      "thresholdField": "studentsPerFaculty",
+      "thresholdValue": 20,
+      "accreditedThresholdValue": 15,
+      "remediation": "Recruit additional full-time faculty or reduce sanctioned intake before resubmission."
+    },
+    {
+      "code": "APH_2026_CADRE",
+      "title": "Cadre Structure Balance",
+      "category": "FACULTY",
+      "severity": "HIGH",
+      "weight": 0.18,
+      "description": "Senior faculty must follow the statutory Professor : Associate Professor : Assistant Professor ratio of 1 : 2 : 6.",
+      "thresholdField": "cadreRatio",
+      "thresholdValue": [1, 2, 6],
+      "remediation": "Promote eligible faculty or appoint professors to restore the 1:2:6 cadre pyramid."
+    },
+    {
+      "code": "APH_2026_INFRA",
+      "title": "Built-up Instructional Area",
+      "category": "INFRASTRUCTURE",
+      "severity": "HIGH",
+      "weight": 0.2,
+      "description": "Instructional space (classrooms, laboratories, tutorials) must provide at least 2.5 sq.m per student of sanctioned intake.",
+      "thresholdField": "builtUpSqMPerStudent",
+      "thresholdValue": 2.5,
+      "remediation": "Add instructional floor area or produce a sanctioned additional-construction plan."
+    },
+    {
+      "code": "APH_2026_LAND",
+      "title": "Minimum Campus Land Parcel",
+      "category": "INFRASTRUCTURE",
+      "severity": "MEDIUM",
+      "weight": 0.12,
+      "description": "A permanent campus must hold a contiguous land parcel of at least 8,000 sq.m within the approved geographic region.",
+      "thresholdField": "landAreaSqMeters",
+      "thresholdValue": 8000,
+      "remediation": "Submit registered land documents meeting the minimum parcel requirement."
+    },
+    {
+      "code": "APH_2026_PHD",
+      "title": "Doctoral Faculty Strength",
+      "category": "FACULTY",
+      "severity": "HIGH",
+      "weight": 0.12,
+      "description": "At least 40% of full-time faculty must hold a Ph.D. in the relevant discipline.",
+      "thresholdField": "phdFacultyShare",
+      "thresholdValue": 0.4,
+      "remediation": "Recruit doctoral faculty or enrol existing faculty in recognised Ph.D. programmes."
+    },
+    {
+      "code": "APH_2026_LIBRARY",
+      "title": "Library & Learning Resources",
+      "category": "INFRASTRUCTURE",
+      "severity": "MEDIUM",
+      "weight": 0.1,
+      "description": "The central library must hold a minimum of 12 volumes per student along with prescribed journals.",
+      "thresholdField": "libraryVolumesPerStudent",
+      "thresholdValue": 12,
+      "remediation": "Procure additional titles and journal subscriptions and update the accession register."
+    }
+  ]
+}

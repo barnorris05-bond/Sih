@@ -1,0 +1,155 @@
+// Production PostgreSQL schema for the AICTE Approval Platform.
+//
+// The zero-configuration demo in this repository persists the same shapes to
+// `backend/.data/db.json` (see backend/src/store/database.ts). To move to
+// PostgreSQL:
+//
+//   docker compose up -d postgres
+//   npx prisma generate --schema backend/prisma/schema.prisma
+//   npx prisma db push   --schema backend/prisma/schema.prisma
+//
+// then swap the repository implementation for Prisma delegates. The engine,
+// state machine and API contracts are unchanged.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  INSTITUTION_USER
+  REGIONAL_OFFICER
+  SCRUTINY_MEMBER
+  AICTE_ADMIN
+}
+
+enum ApplicationState {
+  DRAFT
+  SUBMITTED
+  RULE_VALIDATION_FAILED
+  UNDER_SCRUTINY
+  DEFICIENCY_NOTIFIED
+  EVC_INSPECTION
+  APPROVED
+  REJECTED
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum EventType {
+  STATE_CHANGED
+  DEFICIENCY_RAISED
+  SLA_WARNING
+  SLA_BREACHED
+  APPLICATION_SUBMITTED
+  APPLICATION_APPROVED
+}
+
+model User {
+  id            String       @id @default(uuid())
+  email         String       @unique
+  passwordHash  String
+  name          String
+  role          Role         @default(INSTITUTION_USER)
+  institution   Institution? @relation(fields: [institutionId], references: [id])
+  institutionId String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  auditLogs     AuditLog[]
+
+  @@index([institutionId])
+}
+
+model Institution {
+  id                  String        @id @default(uuid())
+  aicteCode           String        @unique
+  name                String
+  state               String
+  region              String
+  city                String
+  landAreaSqMeters    Float
+  builtUpAreaSqMeters Float
+  users               User[]
+  applications        Application[]
+  createdAt           DateTime      @default(now())
+
+  @@index([state])
+  @@index([region])
+}
+
+model Application {
+  id              String           @id @default(uuid())
+  institutionId   String
+  institution     Institution      @relation(fields: [institutionId], references: [id])
+  academicYear    String           @default("2026-2027")
+  currentState    ApplicationState @default(DRAFT)
+  /// Dynamic handbook payload: programmes, faculty, infrastructure, documents.
+  formData        Json
+  complianceScore Float            @default(0)
+  slaDeadline     DateTime?
+  submittedAt     DateTime?
+  escalated       Boolean          @default(false)
+  decisionNotes   String?
+  deficiencies    Deficiency[]
+  auditLogs       AuditLog[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([institutionId, currentState])
+  @@index([currentState, slaDeadline])
+}
+
+model Deficiency {
+  id                  String      @id @default(uuid())
+  applicationId       String
+  application         Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  ruleCode            String
+  severity            Severity    @default(HIGH)
+  title               String
+  description         String
+  requiredValue       String
+  actualValue         String
+  remediationDeadline DateTime
+  isResolved          Boolean     @default(false)
+  resolvedAt          DateTime?
+  createdAt           DateTime    @default(now())
+
+  @@index([applicationId, isResolved])
+  @@index([ruleCode])
+}
+
+model AuditLog {
+  id            String           @id @default(uuid())
+  applicationId String
+  application   Application      @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  actorId       String
+  actor         User             @relation(fields: [actorId], references: [id])
+  previousState ApplicationState
+  newState      ApplicationState
+  actionNotes   String
+  automated     Boolean          @default(false)
+  timestamp     DateTime         @default(now())
+
+  @@index([applicationId, timestamp])
+}
+
+model PlatformEvent {
+  id            String        @id @default(uuid())
+  type          EventType
+  title         String
+  message       String
+  applicationId String?
+  severity      Severity      @default(MEDIUM)
+  createdAt     DateTime      @default(now())
+
+  @@index([createdAt])
+}
