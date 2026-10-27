@@ -21,6 +21,7 @@ import { Hero } from "@/components/landing/hero";
 import { ComplianceGauge } from "@/components/dashboard/compliance-gauge";
 import { Badge } from "@/components/ui/badge";
 import { formatNumber } from "@/lib/utils";
+import { LandingPage as CompleteLandingPage } from "@/components/landing/landing-page";
 
 export const dynamic = "force-dynamic";
 
@@ -81,7 +82,7 @@ const PORTALS = [
   },
 ];
 
-export default function LandingPage() {
+function LegacyLandingPage() {
   const analytics = buildAnalytics();
   const { kpis } = analytics;
 
@@ -297,6 +298,8 @@ export default function LandingPage() {
     </div>
   );
 }
+
+export default CompleteLandingPage;
 
 function ButtonLike({
   children,
