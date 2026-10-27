@@ -25,7 +25,11 @@ export interface DatabaseShape {
 const globalForDb = globalThis as unknown as { __aicteDatabase?: DatabaseShape };
 
 function ensureDataDir(): void {
-  fs.mkdirSync(dataDir, { recursive: true });
+  try {
+    fs.mkdirSync(dataDir, { recursive: true });
+  } catch {
+    // Ignore — if the directory can't be created, writeToDisk will handle it.
+  }
 }
 
 function readFromDisk(): DatabaseShape | null {
@@ -43,10 +47,26 @@ function readFromDisk(): DatabaseShape | null {
 }
 
 function writeToDisk(db: DatabaseShape): void {
-  ensureDataDir();
-  const temp = path.join(dataDir, `db.${process.pid}.tmp`);
-  fs.writeFileSync(temp, JSON.stringify(db, null, 2), "utf8");
-  fs.renameSync(temp, databaseFile);
+  try {
+    ensureDataDir();
+    const temp = path.join(dataDir, `db.${process.pid}.tmp`);
+    fs.writeFileSync(temp, JSON.stringify(db, null, 2), "utf8");
+    fs.renameSync(temp, databaseFile);
+  } catch (err) {
+    // Vercel and other read-only serverless environments cannot persist to the
+    // filesystem. Log once and continue — the database stays in-memory for the
+    // lifetime of this container.
+    if ((err as NodeJS.ErrnoException).code === "EROFS" ||
+        (err as NodeJS.ErrnoException).code === "EACCES" ||
+        (err as NodeJS.ErrnoException).code === "ENOENT") {
+      if (!process.env.__AICTE_FS_WARNED) {
+        process.env.__AICTE_FS_WARNED = "1";
+        console.warn("[aicte-db] Filesystem is read-only; running with in-memory store only.");
+      }
+      return;
+    }
+    throw err;
+  }
 }
 
 export function getDatabase(): DatabaseShape {
