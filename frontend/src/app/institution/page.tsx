@@ -24,7 +24,6 @@ import {
 import {
   ensurePlatformRuntime,
   getAuditFeed,
-  getAnalytics,
   listApplications,
   recentEvents,
 } from "@aicte/backend";
@@ -96,10 +95,6 @@ export default async function InstitutionDashboard() {
             severity: "INFO" as const,
             timestamp: item.timestamp,
           }));
-  const analytics = getAnalytics();
-
-  const approvedCount = applicationsList.filter((app) => app.currentState === "APPROVED").length;
-
   return (
     <PageShell
       eyebrow="Institution workspace"
@@ -127,7 +122,7 @@ export default async function InstitutionDashboard() {
         </>
       }
     >
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-3">
         <StatCard
           label="Compliance index"
           value={active?.complianceScore ?? 0}
@@ -153,17 +148,8 @@ export default async function InstitutionDashboard() {
           value={applicationsList.length}
           icon="layers"
           accent="sky"
-          hint={`${approvedCount} approved to date`}
+          hint="All filings linked to this institution"
           delay={0.1}
-        />
-        <StatCard
-          label="National approval rate"
-          value={analytics.kpis.approvalRate}
-          suffix="%"
-          icon="landmark"
-          accent="emerald"
-          hint={`Median cycle ${analytics.kpis.medianCycleDays} days`}
-          delay={0.15}
         />
       </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -33,7 +33,22 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const navItems = user ? NAV_BY_ROLE[user.role] : [];
+  const landing = pathname === "/";
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 18);
+      const maximum = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(maximum > 0 ? Math.min(1, window.scrollY / maximum) : 0);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); };
+  }, []);
 
   async function handleSignOut() {
     setSigningOut(true);
@@ -54,13 +69,13 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-background/70 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+    <header className={cn("sticky top-0 z-40 px-3 pt-3 transition-all duration-300 sm:px-5", scrolled ? (landing ? "bg-[#171329]/75" : "bg-background/60") : "bg-transparent")}>
+      <div className={cn("mx-auto flex h-14 w-full max-w-[1200px] items-center justify-between gap-4 rounded-2xl border px-3 transition-all duration-300 sm:px-4", scrolled ? (landing ? "border-fuchsia-200/20 bg-[#171329]/92 shadow-[0_18px_60px_-32px_rgba(118,103,200,0.45)] backdrop-blur-xl" : "border-white/[0.12] bg-background/85 shadow-[0_18px_60px_-32px_rgba(15,23,42,0.95)] backdrop-blur-xl") : (landing ? "border-white/[0.1] bg-[#171329]/60 backdrop-blur-md" : "border-white/[0.06] bg-background/45 backdrop-blur-md"))}>
         <Link href={user ? ROLE_META[user.role].home : "/"} className="group flex items-center gap-2.5">
           <motion.span
             whileHover={{ rotate: -6, scale: 1.04 }}
             transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            className="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-500 to-sky-500 shadow-[0_8px_28px_-10px_rgba(99,102,241,0.9)]"
+            className="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[#7667C8] via-[#A7A5F5] to-[#F2BFE0] shadow-[0_8px_28px_-10px_rgba(118,103,200,0.9)]"
           >
             <ShieldCheck className="h-5 w-5 text-white" />
             <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/25" />
@@ -118,7 +133,7 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
           {user ? (
             <>
               <div className="hidden items-center gap-2 rounded-xl border border-white/10 bg-white/[0.035] px-2.5 py-1.5 sm:flex">
-                <span className="grid h-6 w-6 place-items-center rounded-lg bg-gradient-to-br from-indigo-500/80 to-sky-500/80 text-[9px] font-bold text-white">
+                <span className="grid h-6 w-6 place-items-center rounded-lg bg-gradient-to-br from-[#7667C8]/80 to-[#F2BFE0]/80 text-[9px] font-bold text-white">
                   {initials(user.name)}
                 </span>
                 <span className="leading-tight">
@@ -144,7 +159,8 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
                 type="button"
                 onClick={() => setMobileOpen((open) => !open)}
                 className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-muted-foreground md:hidden"
-                aria-label="Toggle navigation"
+                aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+                aria-expanded={mobileOpen}
               >
                 {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
               </button>
@@ -166,9 +182,10 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
           )}
         </div>
       </div>
+      {landing ? <motion.div className="mx-auto mt-1 h-px w-full max-w-[1200px] origin-left rounded-full bg-gradient-to-r from-[#A7A5F5] via-[#F2BFE0] to-[#C8E5F8]" animate={{ scaleX: scrollProgress }} transition={{ duration: .12, ease: "linear" }} aria-hidden="true" /> : null}
 
       <AnimatePresence>
-        {user && mobileOpen ? (
+        {mobileOpen ? (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -177,7 +194,14 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
             className="overflow-hidden border-t border-white/[0.06] md:hidden"
           >
             <div className="space-y-1 px-4 py-3">
-              {navItems.map((item) => (
+              {!user && [
+                { href: "#workflow", label: "Workflow" },
+                { href: "#portals", label: "Portals" },
+                { href: "#handbook", label: "Handbook rules" },
+              ].map((item) => (
+                <a key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-white/[0.04] hover:text-foreground">{item.label}</a>
+              ))}
+              {user && navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}

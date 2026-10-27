@@ -22,7 +22,7 @@ export function FadeIn({
   return (
     <motion.div
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
+      initial={reduce ? { opacity: 1, y: 0 } : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once, margin: "-60px" }}
       transition={{ ...springSoft, delay }}
