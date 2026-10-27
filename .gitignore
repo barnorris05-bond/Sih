@@ -10,3 +10,5 @@ backend/.data/
 frontend/.next/
 screenshots/
 .DS_Store
+
+.vercel
