@@ -259,7 +259,7 @@ export function CommandCenter({
                             stateEntry.approvalRate >= 60
                               ? "border-emerald-400/25 bg-emerald-400/[0.08]"
                               : stateEntry.approvalRate >= 30
-                                ? "border-indigo-400/20 bg-indigo-500/[0.07]"
+                                ? "border-violet-400/20 bg-violet-500/[0.07]"
                                 : "border-amber-400/20 bg-amber-400/[0.06]",
                           )}
                         >
@@ -301,13 +301,13 @@ export function CommandCenter({
                 </div>
 
                 <div className="grid gap-4 lg:grid-cols-2">
-                  <div className="rounded-xl border border-white/[0.06] bg-white/[0.015] p-3">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                       Compliance distribution
                     </p>
                     <ComplianceHistogram data={analytics.complianceHistogram} />
                   </div>
-                  <div className="rounded-xl border border-white/[0.06] bg-white/[0.015] p-3">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                       State concentration
                     </p>
@@ -339,13 +339,13 @@ export function CommandCenter({
 
               <TabsContent value="sla" className="space-y-4">
                 <div className="grid gap-4 lg:grid-cols-2">
-                  <div className="rounded-xl border border-white/[0.06] bg-white/[0.015] p-3">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                       SLA health by stage
                     </p>
                     <SlaStackedChart data={analytics.slaBuckets} />
                   </div>
-                  <div className="rounded-xl border border-white/[0.06] bg-white/[0.015] p-3">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                       Deficiency Pareto
                     </p>
@@ -369,7 +369,7 @@ export function CommandCenter({
                       </thead>
                       <tbody>
                         {slaQueue.map((application) => (
-                          <tr key={application.id} className="border-t border-white/[0.05]">
+                          <tr key={application.id} className="border-t border-white/10">
                             <td className="max-w-[220px] px-3 py-2">
                               <p className="truncate text-[11px] text-foreground">
                                 {application.institution.name}
@@ -437,7 +437,7 @@ export function CommandCenter({
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-sm">
-                <AlertOctagon className="h-4 w-4 text-rose-300" /> Escalation queue
+                <AlertOctagon className="h-4 w-4 text-rose-300 light:text-rose-700" /> Escalation queue
               </CardTitle>
               <CardDescription>{escalated.length} breached window(s)</CardDescription>
             </CardHeader>
@@ -456,7 +456,7 @@ export function CommandCenter({
                       <p className="line-clamp-1 text-[10px] font-medium text-foreground">
                         {application.institution.name}
                       </p>
-                      <span className="shrink-0 rounded-full bg-rose-500/20 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-rose-200">
+                      <span className="shrink-0 rounded-full bg-rose-500/20 px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-rose-200 light:text-rose-700">
                         SLA
                       </span>
                     </div>
@@ -485,7 +485,7 @@ export function CommandCenter({
           <Card>
             <CardHeader className="pb-1">
               <CardTitle className="flex items-center gap-2 text-sm">
-                <Activity className="h-4 w-4 text-emerald-300" /> System audit feed
+                <Activity className="h-4 w-4 text-emerald-300 light:text-emerald-700" /> System audit feed
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-1">
@@ -499,23 +499,23 @@ export function CommandCenter({
                 <span className="flex items-center gap-1.5 text-muted-foreground">
                   <ShieldCheck className="h-3 w-3 text-emerald-400" /> SLA sweeper
                 </span>
-                <span className="text-emerald-300">Active · 20s</span>
+                <span className="text-emerald-300 light:text-emerald-700">Active · 20s</span>
               </p>
               <p className="flex items-center justify-between">
                 <span className="flex items-center gap-1.5 text-muted-foreground">
-                  <Gauge className="h-3 w-3 text-indigo-300" /> Rule book
+                  <Gauge className="h-3 w-3 text-violet-200 light:text-violet-700" /> Rule book
                 </span>
                 <span className="font-mono text-foreground">APH-2026.1</span>
               </p>
               <p className="flex items-center justify-between">
                 <span className="flex items-center gap-1.5 text-muted-foreground">
-                  <Users className="h-3 w-3 text-sky-300" /> Actor
+                  <Users className="h-3 w-3 text-sky-300 light:text-sky-700" /> Actor
                 </span>
                 <span className="text-foreground">{actorName}</span>
               </p>
               <p className="flex items-center justify-between">
                 <span className="flex items-center gap-1.5 text-muted-foreground">
-                  <ClipboardList className="h-3 w-3 text-violet-300" /> Generated
+                  <ClipboardList className="h-3 w-3 text-violet-300 light:text-violet-700" /> Generated
                 </span>
                 <span className="text-foreground">{relativeTime(analytics.generatedAt)}</span>
               </p>
@@ -528,7 +528,7 @@ export function CommandCenter({
         {analytics.slaBuckets.map((bucket) => (
           <div
             key={bucket.stage}
-            className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3"
+            className="rounded-xl border border-white/10 bg-white/[0.04] p-3"
           >
             <p className="text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
               {bucket.stage}

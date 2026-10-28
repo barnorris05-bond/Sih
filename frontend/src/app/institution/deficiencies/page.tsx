@@ -55,7 +55,7 @@ export default async function DeficienciesPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center gap-3 py-16 text-center">
             <span className="grid h-12 w-12 place-items-center rounded-2xl border border-emerald-400/25 bg-emerald-400/10">
-              <CheckCircle2 className="h-6 w-6 text-emerald-300" />
+              <CheckCircle2 className="h-6 w-6 text-emerald-300 light:text-emerald-700" />
             </span>
             <div>
               <p className="font-display text-base font-semibold text-foreground">

@@ -307,7 +307,7 @@ export function ApplicationWizard({
           <CardHeader className="gap-3">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-indigo-300/80">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-violet-200/80">
                   Step {step + 1} of {STEPS.length}
                 </p>
                 <CardTitle className="mt-1 text-lg">{currentStep.title}</CardTitle>
@@ -330,19 +330,19 @@ export function ApplicationWizard({
                     className={cn(
                       "group relative rounded-lg border px-2 py-1.5 text-left transition-all",
                       current
-                        ? "border-indigo-400/40 bg-indigo-500/10"
+                        ? "border-violet-400/40 bg-violet-500/10"
                         : complete
                           ? "border-emerald-400/20 bg-emerald-400/[0.04]"
-                          : "border-white/[0.06] bg-white/[0.015]",
+                          : "border-white/10 bg-white/[0.03]",
                     )}
                   >
                     <span
                       className={cn(
                         "flex items-center gap-1 text-[9px] font-semibold uppercase tracking-[0.12em]",
                         current
-                          ? "text-indigo-200"
+                          ? "text-violet-100 light:text-violet-700"
                           : complete
-                            ? "text-emerald-300"
+                            ? "text-emerald-300 light:text-emerald-700"
                             : "text-muted-foreground/60",
                       )}
                     >
@@ -350,7 +350,7 @@ export function ApplicationWizard({
                         className={cn(
                           "grid h-3.5 w-3.5 place-items-center rounded-full text-[8px]",
                           current
-                            ? "bg-indigo-400/30"
+                            ? "bg-violet-400/30"
                             : complete
                               ? "bg-emerald-400/25"
                               : "bg-white/10",
@@ -424,7 +424,7 @@ export function ApplicationWizard({
                       />
                     </Field>
 
-                    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 sm:col-span-2">
+                    <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 sm:col-span-2">
                       <p className="text-[10px] leading-relaxed text-muted-foreground">
                         <span className="font-medium text-foreground">Why this matters.</span> The
                         geographic region routes your file to the correct Regional Officer, and the
@@ -463,7 +463,7 @@ export function ApplicationWizard({
                     </div>
 
                     {programFields.length === 0 ? (
-                      <div className="rounded-xl border border-dashed border-white/10 bg-white/[0.015] p-8 text-center">
+                      <div className="rounded-xl border border-dashed border-white/10 bg-white/[0.03] p-8 text-center">
                         <GraduationCap className="mx-auto h-6 w-6 text-muted-foreground" />
                         <p className="mt-2 text-xs text-muted-foreground">
                           Add at least one programme to calculate your student-faculty ratio.
@@ -478,7 +478,7 @@ export function ApplicationWizard({
                           layout
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="grid gap-2 rounded-xl border border-white/[0.07] bg-white/[0.02] p-3 sm:grid-cols-[1.6fr_0.7fr_0.5fr_auto_auto] sm:items-end"
+                          className="grid gap-2 rounded-xl border border-white/[0.07] bg-white/[0.04] p-3 sm:grid-cols-[1.6fr_0.7fr_0.5fr_auto_auto] sm:items-end"
                         >
                           <Field
                             label={`Programme ${index + 1}`}
@@ -510,7 +510,7 @@ export function ApplicationWizard({
                           <label className="flex h-11 cursor-pointer items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] px-2 text-[10px] text-muted-foreground">
                             <input
                               type="checkbox"
-                              className="h-3.5 w-3.5 accent-indigo-500"
+                              className="h-3.5 w-3.5 accent-violet-500"
                               {...form.register(`programs.${index}.accredited`)}
                             />
                             NBA
@@ -522,18 +522,18 @@ export function ApplicationWizard({
                             onClick={() => remove(index)}
                             aria-label="Remove programme"
                           >
-                            <Trash2 className="h-3.5 w-3.5 text-rose-300" />
+                            <Trash2 className="h-3.5 w-3.5 text-rose-300 light:text-rose-700" />
                           </Button>
                         </motion.div>
                       ))}
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-indigo-400/20 bg-indigo-500/[0.05] px-3 py-2.5">
-                      <p className="text-[10px] text-indigo-100/80">
+                    <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-violet-400/20 bg-violet-500/[0.05] px-3 py-2.5">
+                      <p className="text-[10px] text-violet-100/80">
                         Accreditated programmes use the 1:15 faculty ratio, raising the required
                         faculty count.
                       </p>
-                      <span className="text-[10px] font-medium text-indigo-200">
+                      <span className="text-[10px] font-medium text-violet-100 light:text-violet-700">
                         Required faculty {requiredFacultyFor(values)}
                       </span>
                     </div>
@@ -649,7 +649,7 @@ export function ApplicationWizard({
                           {...form.register("libraryVolumes", { valueAsNumber: true })}
                         />
                       </Field>
-                      <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
+                      <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
                         <p className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
                           <Users className="h-3 w-3" /> Live faculty ratio
                         </p>
@@ -678,9 +678,9 @@ export function ApplicationWizard({
                       <SummaryTile icon={Users} label="Faculty declared" value={formatNumber(values.facultyCount || 0)} />
                     </div>
 
-                    <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-4">
+                    <div className="rounded-xl border border-white/[0.07] bg-white/[0.04] p-4">
                       <p className="flex items-center gap-1.5 text-xs font-medium text-foreground">
-                        <FolderOpen className="h-3.5 w-3.5 text-indigo-300" /> Supporting evidence
+                        <FolderOpen className="h-3.5 w-3.5 text-violet-200 light:text-violet-700" /> Supporting evidence
                       </p>
                       <p className="mt-1 text-[10px] text-muted-foreground">
                         Tick the documents included with this filing. The scrutiny desk verifies them
@@ -690,12 +690,12 @@ export function ApplicationWizard({
                         {documents.map((document, index) => (
                           <label
                             key={document.id}
-                            className="flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2 transition-colors hover:border-indigo-400/25"
+                            className="flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 transition-colors hover:border-violet-400/25"
                           >
                             <span className="flex min-w-0 items-center gap-2.5">
                               <input
                                 type="checkbox"
-                                className="h-3.5 w-3.5 shrink-0 accent-indigo-500"
+                                className="h-3.5 w-3.5 shrink-0 accent-violet-500"
                                 checked={Boolean(document.verified)}
                                 onChange={(event) =>
                                   form.setValue(`documents.${index}.verified`, event.target.checked, {
@@ -729,7 +729,7 @@ export function ApplicationWizard({
                 ) : null}
             </motion.div>
 
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-4">
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
               <Button
                 type="button"
                 variant="ghost"
@@ -759,10 +759,10 @@ export function ApplicationWizard({
       </div>
 
       <aside className="space-y-3 xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:self-start xl:overflow-y-auto xl:pr-1">
-        <Card className="border-indigo-400/15">
+        <Card className="border-violet-400/15">
           <CardHeader className="pb-1">
             <CardTitle className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-indigo-300" /> Live rule engine
+              <Sparkles className="h-4 w-4 text-violet-200 light:text-violet-700" /> Live rule engine
             </CardTitle>
             <CardDescription>
               Recomputed on every keystroke against handbook {evaluation.totalRules} constraints.
@@ -790,7 +790,7 @@ export function ApplicationWizard({
               className="w-full justify-start"
               onClick={autofillStatutoryMinimums}
             >
-              <Wand2 className="h-4 w-4 text-indigo-300" /> Apply statutory minimums
+              <Wand2 className="h-4 w-4 text-violet-200 light:text-violet-700" /> Apply statutory minimums
             </Button>
             <Button
               type="button"
@@ -848,7 +848,7 @@ function SummaryTile({
   value: string;
 }) {
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
+    <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
       <p className="flex items-center gap-1 text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
         <Icon className="h-3 w-3" /> {label}
       </p>

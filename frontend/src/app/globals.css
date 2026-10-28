@@ -4,33 +4,33 @@
 
 @layer base {
   :root {
-    --background: 224 47% 5%;
-    --foreground: 210 40% 96%;
-    --surface: 223 40% 8%;
-    --border: 217 33% 18%;
-    --input: 217 33% 16%;
-    --ring: 239 84% 67%;
-    --primary: 239 84% 67%;
-    --primary-foreground: 0 0% 100%;
-    --muted: 217 33% 12%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 199 89% 60%;
-    --accent-foreground: 222 47% 8%;
+    --background: 242 46% 12%;
+    --foreground: 240 20% 97%;
+    --surface: 242 42% 17%;
+    --border: 242 36% 30%;
+    --input: 242 36% 25%;
+    --ring: 253 88% 72%;
+    --primary: 253 88% 72%;
+    --primary-foreground: 243 47% 12%;
+    --muted: 242 36% 21%;
+    --muted-foreground: 243 28% 80%;
+    --accent: 212 100% 68%;
+    --accent-foreground: 0 0% 100%;
     color-scheme: dark;
   }
 
   html.light {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
+    --background: 242 60% 97.5%;
+    --foreground: 243 47% 14%;
     --surface: 0 0% 100%;
-    --border: 214 32% 88%;
-    --input: 214 32% 91%;
-    --ring: 243 75% 59%;
-    --primary: 243 75% 59%;
+    --border: 243 30% 88%;
+    --input: 243 30% 92%;
+    --ring: 253 82% 56%;
+    --primary: 253 82% 56%;
     --primary-foreground: 0 0% 100%;
-    --muted: 210 40% 94%;
-    --muted-foreground: 215 16% 42%;
-    --accent: 199 89% 48%;
+    --muted: 243 40% 94%;
+    --muted-foreground: 243 22% 46%;
+    --accent: 212 100% 56%;
     --accent-foreground: 0 0% 100%;
     color-scheme: light;
   }
@@ -50,7 +50,7 @@
   }
 
   ::selection {
-    background: rgba(129, 140, 248, 0.35);
+    background: rgba(139, 124, 255, 0.4);
     color: inherit;
   }
 
@@ -120,14 +120,14 @@
   }
 
   .text-gradient {
-    background: linear-gradient(120deg, #c7d2fe 0%, #818cf8 35%, #38bdf8 75%, #a5f3fc 100%);
+    background: linear-gradient(120deg, #ddd8ff 0%, #a797ff 30%, #6889ff 65%, #7dd8ff 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
   html.light .text-gradient {
-    background: linear-gradient(120deg, #4338ca 0%, #6366f1 40%, #0284c7 100%);
+    background: linear-gradient(120deg, #4b32c3 0%, #6549e8 40%, #1a77e8 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

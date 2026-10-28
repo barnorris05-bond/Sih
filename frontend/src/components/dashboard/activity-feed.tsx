@@ -25,10 +25,10 @@ const ICONS: Record<PlatformEvent["type"], React.ReactNode> = {
 };
 
 const TONES: Record<PlatformEvent["severity"], string> = {
-  INFO: "border-sky-400/20 bg-sky-400/[0.06] text-sky-300",
-  SUCCESS: "border-emerald-400/25 bg-emerald-400/[0.07] text-emerald-300",
-  WARNING: "border-amber-400/25 bg-amber-400/[0.07] text-amber-300",
-  CRITICAL: "border-rose-400/30 bg-rose-500/[0.08] text-rose-300",
+  INFO: "border-sky-400/20 bg-sky-400/[0.06] text-sky-300 light:text-sky-700",
+  SUCCESS: "border-emerald-400/25 bg-emerald-400/[0.07] text-emerald-300 light:text-emerald-700",
+  WARNING: "border-amber-400/25 bg-amber-400/[0.07] text-amber-300 light:text-amber-700",
+  CRITICAL: "border-rose-400/30 bg-rose-500/[0.08] text-rose-300 light:text-rose-700",
 };
 
 export function ActivityFeed({
@@ -54,7 +54,7 @@ export function ActivityFeed({
 
   return (
     <div className={cn("flex flex-col", className)}>
-      <div className="flex items-center justify-between gap-2 border-b border-white/[0.06] px-1 pb-2">
+      <div className="flex items-center justify-between gap-2 border-b border-white/10 px-1 pb-2">
         <div className="flex items-center gap-2">
           <span className="relative flex h-1.5 w-1.5">
             <span
@@ -87,7 +87,7 @@ export function ActivityFeed({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ type: "spring", stiffness: 320, damping: 26 }}
-              className="flex items-start gap-2.5 rounded-xl border border-transparent px-2 py-2 transition-colors hover:border-white/[0.06] hover:bg-white/[0.025]"
+              className="flex items-start gap-2.5 rounded-xl border border-transparent px-2 py-2 transition-colors hover:border-white/10 hover:bg-white/[0.025]"
             >
               <span
                 className={cn(

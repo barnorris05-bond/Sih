@@ -43,28 +43,28 @@ const DEMO_ACCOUNTS: Record<
     label: "Institution",
     description: "Draft, submit and remediate",
     icon: Building2,
-    accent: "from-indigo-500/25 to-indigo-500/0 border-indigo-400/40 text-indigo-200",
+    accent: "from-violet-500/25 to-violet-500/0 border-violet-400/40 text-violet-100 light:text-violet-700",
   },
   reviewer: {
     email: "reviewer@aicte.demo",
     label: "Scrutiny",
     description: "Audit documents and decide",
     icon: Gavel,
-    accent: "from-sky-500/25 to-sky-500/0 border-sky-400/40 text-sky-200",
+    accent: "from-sky-500/25 to-sky-500/0 border-sky-400/40 text-sky-200 light:text-sky-700",
   },
   officer: {
     email: "officer@aicte.demo",
     label: "Regional",
     description: "Monitor SLA performance",
     icon: ShieldCheck,
-    accent: "from-emerald-500/20 to-emerald-500/0 border-emerald-400/40 text-emerald-200",
+    accent: "from-emerald-500/20 to-emerald-500/0 border-emerald-400/40 text-emerald-200 light:text-emerald-700",
   },
   admin: {
     email: "admin@aicte.demo",
     label: "Admin",
     description: "Command the pipeline",
     icon: Gauge,
-    accent: "from-violet-500/25 to-violet-500/0 border-violet-400/40 text-violet-200",
+    accent: "from-violet-500/25 to-violet-500/0 border-violet-400/40 text-violet-200 light:text-violet-700",
   },
 };
 
@@ -132,7 +132,7 @@ export function LoginForm({ initialRole, next }: { initialRole: DemoRole; next?:
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className="relative"
       >
-        <span className="inline-flex items-center gap-2 rounded-full border border-indigo-400/25 bg-indigo-500/[0.08] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-indigo-200">
+        <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/[0.08] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-violet-100 light:text-violet-700">
           <Sparkles className="h-3 w-3" /> Secure role gateway
         </span>
         <h1 className="mt-5 max-w-lg font-display text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-[2.6rem]">
@@ -165,19 +165,19 @@ export function LoginForm({ initialRole, next }: { initialRole: DemoRole; next?:
             </p>
             <div className="mt-3 space-y-2 text-[11px] text-muted-foreground">
               <p className="flex items-center gap-1.5">
-                <LockKeyhole className="h-3 w-3 text-indigo-300" /> JWT + scrypt credentials
+                <LockKeyhole className="h-3 w-3 text-violet-200 light:text-violet-700" /> JWT + scrypt credentials
               </p>
               <p className="flex items-center gap-1.5">
-                <ShieldCheck className="h-3 w-3 text-emerald-300" /> Guarded state transitions
+                <ShieldCheck className="h-3 w-3 text-emerald-300 light:text-emerald-700" /> Guarded state transitions
               </p>
               <p className="flex items-center gap-1.5">
-                <ArrowRight className="h-3 w-3 text-sky-300" /> SLA auto-escalation
+                <ArrowRight className="h-3 w-3 text-sky-300 light:text-sky-700" /> SLA auto-escalation
               </p>
             </div>
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4">
+        <div className="mt-6 rounded-2xl border border-white/[0.07] bg-white/[0.04] p-4">
           <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
             Every 2026-27 handbook rule is weighted
           </p>
@@ -202,7 +202,7 @@ export function LoginForm({ initialRole, next }: { initialRole: DemoRole; next?:
         transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         className="glass relative overflow-hidden rounded-3xl p-6 shadow-[0_50px_140px_-70px_rgba(56,189,248,0.5)] sm:p-8"
       >
-        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-indigo-500/20 blur-[80px]" />
+        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-violet-500/20 blur-[80px]" />
         <div className="relative">
           <div className="flex items-center justify-between">
             <div>
@@ -214,7 +214,7 @@ export function LoginForm({ initialRole, next }: { initialRole: DemoRole; next?:
               </p>
             </div>
             <span className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/[0.05]">
-              <KeyRound className="h-4 w-4 text-indigo-300" />
+              <KeyRound className="h-4 w-4 text-violet-200 light:text-violet-700" />
             </span>
           </div>
 
@@ -231,7 +231,7 @@ export function LoginForm({ initialRole, next }: { initialRole: DemoRole; next?:
                     "group relative overflow-hidden rounded-xl border p-3 text-left transition-all duration-200",
                     selected
                       ? `bg-gradient-to-br ${account.accent}`
-                      : "border-white/[0.08] bg-white/[0.02] text-muted-foreground hover:border-white/20 hover:bg-white/[0.04]",
+                      : "border-white/[0.08] bg-white/[0.04] text-muted-foreground hover:border-white/20 hover:bg-white/[0.04]",
                   )}
                 >
                   <div className="flex items-center justify-between">
@@ -300,7 +300,7 @@ export function LoginForm({ initialRole, next }: { initialRole: DemoRole; next?:
               <motion.p
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-lg border border-rose-400/30 bg-rose-500/[0.08] px-3 py-2 text-[11px] text-rose-200"
+                className="rounded-lg border border-rose-400/30 bg-rose-500/[0.08] px-3 py-2 text-[11px] text-rose-200 light:text-rose-700"
               >
                 {serverError}
               </motion.p>
@@ -323,7 +323,7 @@ export function LoginForm({ initialRole, next }: { initialRole: DemoRole; next?:
           <p className="mt-4 text-center text-[10px] leading-relaxed text-muted-foreground">
             Prototype environment. Credentials are seeded locally; replace the signing secret and
             identity provider before production.{" "}
-            <Link href="/" className="text-indigo-300 hover:text-indigo-200">
+            <Link href="/" className="text-violet-200 hover:text-violet-100 light:text-violet-700 light:hover:text-violet-800">
               Back to home
             </Link>
           </p>

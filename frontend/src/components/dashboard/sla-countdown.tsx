@@ -78,9 +78,9 @@ export function SlaCountdown({ deadline, className, compact = false, label }: Sl
         className={cn(
           "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium tabular-nums",
           overdue
-            ? "border-rose-400/40 bg-rose-500/10 text-rose-300"
+            ? "border-rose-400/40 bg-rose-500/10 text-rose-300 light:text-rose-700"
             : urgent
-              ? "border-amber-400/40 bg-amber-400/10 text-amber-300"
+              ? "border-amber-400/40 bg-amber-400/10 text-amber-300 light:text-amber-700"
               : "border-white/10 bg-white/[0.04] text-muted-foreground",
           className,
         )}
@@ -111,10 +111,10 @@ export function SlaCountdown({ deadline, className, compact = false, label }: Sl
           className={cn(
             "inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider",
             overdue
-              ? "bg-rose-500/20 text-rose-300 animate-pulse"
+              ? "bg-rose-500/20 text-rose-300 light:text-rose-700 animate-pulse"
               : urgent
-                ? "bg-amber-400/20 text-amber-300"
-                : "bg-emerald-400/15 text-emerald-300",
+                ? "bg-amber-400/20 text-amber-300 light:text-amber-700"
+                : "bg-emerald-400/15 text-emerald-300 light:text-emerald-700",
           )}
         >
           {overdue ? "SLA exceeded" : urgent ? "At risk" : "On track"}
@@ -123,7 +123,7 @@ export function SlaCountdown({ deadline, className, compact = false, label }: Sl
       <div
         className={cn(
           "mt-1.5 flex items-center gap-1.5 font-display text-lg font-semibold tabular-nums",
-          overdue ? "text-rose-300" : urgent ? "text-amber-200" : "text-foreground",
+          overdue ? "text-rose-300 light:text-rose-700" : urgent ? "text-amber-200 light:text-amber-700" : "text-foreground",
         )}
       >
         {overdue ? <AlertOctagon className="h-4 w-4" /> : <Clock3 className="h-4 w-4" />}

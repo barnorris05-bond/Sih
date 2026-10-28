@@ -112,7 +112,7 @@ export default async function InstitutionDashboard() {
               <FileWarning className="h-3.5 w-3.5" />
               Deficiency desk
               {openDeficiencyTotal > 0 ? (
-                <span className="ml-1 rounded-full bg-rose-500/20 px-1.5 text-[9px] text-rose-300">
+                <span className="ml-1 rounded-full bg-rose-500/20 px-1.5 text-[9px] text-rose-300 light:text-rose-700">
                   {openDeficiencyTotal}
                 </span>
               ) : null}
@@ -149,11 +149,11 @@ export default async function InstitutionDashboard() {
           delay={0.05}
         />
         <StatCard
-          label="Applications filed"
-          value={applicationsList.length}
+          label="In-process files"
+          value={applicationsList.filter((a) => !isTerminalState(a.currentState)).length}
           icon="layers"
           accent="sky"
-          hint={`${approvedCount} approved to date`}
+          hint={`${approvedCount} approved · ${hasDraft ? "draft pending" : "no open draft"}`}
           delay={0.1}
         />
         <StatCard
@@ -198,7 +198,7 @@ export default async function InstitutionDashboard() {
               <CardContent className="space-y-5">
                 <WorkflowTimeline state={active.currentState} />
 
-                <div className="grid gap-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 sm:grid-cols-[auto_1fr] sm:items-center">
+                <div className="grid gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:grid-cols-[auto_1fr] sm:items-center">
                   <ComplianceGauge
                     score={evaluation?.score ?? active.complianceScore}
                     size={154}
@@ -223,13 +223,6 @@ export default async function InstitutionDashboard() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
-                  {active.currentState === "DRAFT" ? (
-                    <Link href="/institution/apply">
-                      <Button size="sm">
-                        Continue draft <ArrowRight className="h-3.5 w-3.5" />
-                      </Button>
-                    </Link>
-                  ) : null}
                   {active.currentState === "DEFICIENCY_NOTIFIED" ||
                   active.currentState === "RULE_VALIDATION_FAILED" ? (
                     <Link href="/institution/deficiencies">
@@ -239,19 +232,19 @@ export default async function InstitutionDashboard() {
                     </Link>
                   ) : null}
                   {active.currentState === "SUBMITTED" || active.currentState === "UNDER_SCRUTINY" ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-lg border border-sky-400/20 bg-sky-400/[0.06] px-3 py-1.5 text-[11px] text-sky-200">
+                    <span className="inline-flex items-center gap-1.5 rounded-lg border border-sky-400/20 bg-sky-400/[0.06] px-3 py-1.5 text-[11px] text-sky-200 light:text-sky-700">
                       <ShieldCheck className="h-3.5 w-3.5" />
                       File is with the scrutiny desk
                     </span>
                   ) : null}
                   {active.currentState === "EVC_INSPECTION" ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-lg border border-violet-400/20 bg-violet-400/[0.06] px-3 py-1.5 text-[11px] text-violet-200">
+                    <span className="inline-flex items-center gap-1.5 rounded-lg border border-violet-400/20 bg-violet-400/[0.06] px-3 py-1.5 text-[11px] text-violet-200 light:text-violet-700">
                       <Landmark className="h-3.5 w-3.5" />
                       Expert Visit Committee scheduled
                     </span>
                   ) : null}
                   {active.currentState === "APPROVED" ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-400/25 bg-emerald-400/[0.07] px-3 py-1.5 text-[11px] text-emerald-200">
+                    <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-400/25 bg-emerald-400/[0.07] px-3 py-1.5 text-[11px] text-emerald-200 light:text-emerald-700">
                       <ShieldCheck className="h-3.5 w-3.5" /> Letter of approval issued
                     </span>
                   ) : null}
@@ -296,7 +289,7 @@ export default async function InstitutionDashboard() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <CalendarClock className="h-4 w-4 text-indigo-300" /> SLA monitor
+                  <CalendarClock className="h-4 w-4 text-violet-200 light:text-violet-700" /> SLA monitor
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -332,7 +325,7 @@ export default async function InstitutionDashboard() {
                 {applicationsList.slice(0, 6).map((application) => (
                   <div
                     key={application.id}
-                    className="flex items-center justify-between gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2"
+                    className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2"
                   >
                     <div className="min-w-0">
                       <p className="truncate font-mono text-[10px] text-muted-foreground">
@@ -363,7 +356,7 @@ export default async function InstitutionDashboard() {
         <FadeIn className="mt-4">
           <Card className="border-amber-400/20">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-amber-200">
+              <CardTitle className="flex items-center gap-2 text-amber-200 light:text-amber-700">
                 <FileWarning className="h-4 w-4" /> Show-cause notice requires action
               </CardTitle>
               <CardDescription>
@@ -408,7 +401,7 @@ function Metric({
   value: string;
 }) {
   return (
-    <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-2.5 py-2">
+    <div className="rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-2">
       <p className="flex items-center gap-1 text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
         <Icon className="h-2.5 w-2.5" /> {label}
       </p>

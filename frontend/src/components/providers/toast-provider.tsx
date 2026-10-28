@@ -30,16 +30,16 @@ const VARIANT_META: Record<
   ToastVariant,
   { icon: React.ReactNode; className: string }
 > = {
-  info: { icon: <Info className="h-4 w-4" />, className: "border-sky-400/30 text-sky-200" },
+  info: { icon: <Info className="h-4 w-4" />, className: "border-sky-400/30 text-sky-200 light:text-sky-700" },
   success: {
     icon: <CheckCircle2 className="h-4 w-4" />,
-    className: "border-emerald-400/30 text-emerald-200",
+    className: "border-emerald-400/30 text-emerald-200 light:text-emerald-700",
   },
   warning: {
     icon: <AlertTriangle className="h-4 w-4" />,
-    className: "border-amber-400/30 text-amber-200",
+    className: "border-amber-400/30 text-amber-200 light:text-amber-700",
   },
-  error: { icon: <XCircle className="h-4 w-4" />, className: "border-rose-400/30 text-rose-200" },
+  error: { icon: <XCircle className="h-4 w-4" />, className: "border-rose-400/30 text-rose-200 light:text-rose-700" },
 };
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {

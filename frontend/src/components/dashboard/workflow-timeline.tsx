@@ -56,8 +56,8 @@ export function WorkflowTimeline({ state }: { state: ApplicationState }) {
         className={cn(
           "absolute left-[18px] top-[17px] h-px max-w-[calc(100%-36px)]",
           rejected
-            ? "bg-gradient-to-r from-indigo-500 via-rose-400 to-rose-500"
-            : "bg-gradient-to-r from-indigo-500 via-indigo-400 to-emerald-400",
+            ? "bg-gradient-to-r from-violet-500 via-rose-400 to-rose-500"
+            : "bg-gradient-to-r from-violet-500 via-blue-400 to-emerald-400",
         )}
       />
       <div className="relative flex justify-between gap-1">
@@ -81,11 +81,11 @@ export function WorkflowTimeline({ state }: { state: ApplicationState }) {
                 className={cn(
                   "relative z-10 grid h-9 w-9 place-items-center rounded-full border bg-[#0b1120] transition-colors",
                   complete
-                    ? "text-emerald-300"
+                    ? "text-emerald-300 light:text-emerald-700"
                     : current
-                      ? "text-indigo-200"
+                      ? "text-violet-100 light:text-violet-700"
                       : "text-muted-foreground/60",
-                  isRejected && "border-rose-400/70 text-rose-300",
+                  isRejected && "border-rose-400/70 text-rose-300 light:text-rose-700",
                 )}
               >
                 {complete ? (
@@ -96,7 +96,7 @@ export function WorkflowTimeline({ state }: { state: ApplicationState }) {
                   <Icon className="h-3.5 w-3.5" />
                 )}
                 {current && !isRejected ? (
-                  <span className="absolute inset-0 animate-ping rounded-full border border-indigo-400/30" />
+                  <span className="absolute inset-0 animate-ping rounded-full border border-violet-400/30" />
                 ) : null}
               </motion.span>
               <span
@@ -106,8 +106,8 @@ export function WorkflowTimeline({ state }: { state: ApplicationState }) {
                     ? "text-emerald-300/80"
                     : current
                       ? isRejected
-                        ? "text-rose-300"
-                        : "text-indigo-200"
+                        ? "text-rose-300 light:text-rose-700"
+                        : "text-violet-100 light:text-violet-700"
                       : "text-muted-foreground/60",
                 )}
               >

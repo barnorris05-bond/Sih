@@ -27,6 +27,10 @@ const config: Config = {
         success: "#34d399",
         warning: "#fbbf24",
         danger: "#fb7185",
+        brand: "#6549e8",
+        "brand-bright": "#8b7cff",
+        "electric": "#478bff",
+        lavender: "#b9a7ff",
       },
       borderRadius: {
         xl: "1rem",
@@ -46,8 +50,8 @@ const config: Config = {
         mono: ["JetBrains Mono", "Cascadia Code", "Consolas", "monospace"],
       },
       boxShadow: {
-        glow: "0 0 60px -12px rgba(99, 102, 241, 0.65)",
-        "glow-sm": "0 0 28px -10px rgba(99, 102, 241, 0.55)",
+        glow: "0 0 60px -12px rgba(139, 124, 255, 0.7)",
+        "glow-sm": "0 0 28px -10px rgba(139, 124, 255, 0.6)",
         panel: "0 24px 80px -32px rgba(2, 6, 23, 0.9)",
       },
       keyframes: {

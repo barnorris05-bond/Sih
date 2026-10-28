@@ -50,34 +50,34 @@ const ACCENTS: Record<
   { icon: string; glow: string; bar: string }
 > = {
   indigo: {
-    icon: "text-indigo-300 border-indigo-400/25 bg-indigo-500/10",
-    glow: "from-indigo-500/20",
-    bar: "bg-indigo-400",
+    icon: "text-violet-200 light:text-violet-700 border-violet-400/35 bg-violet-500/15",
+    glow: "from-violet-500/30",
+    bar: "bg-violet-400",
   },
   emerald: {
-    icon: "text-emerald-300 border-emerald-400/25 bg-emerald-500/10",
+    icon: "text-emerald-300 light:text-emerald-700 border-emerald-400/25 bg-emerald-500/10",
     glow: "from-emerald-500/20",
     bar: "bg-emerald-400",
   },
   amber: {
-    icon: "text-amber-300 border-amber-400/25 bg-amber-500/10",
+    icon: "text-amber-300 light:text-amber-700 border-amber-400/25 bg-amber-500/10",
     glow: "from-amber-500/20",
     bar: "bg-amber-400",
   },
   rose: {
-    icon: "text-rose-300 border-rose-400/25 bg-rose-500/10",
+    icon: "text-rose-300 light:text-rose-700 border-rose-400/25 bg-rose-500/10",
     glow: "from-rose-500/20",
     bar: "bg-rose-400",
   },
   sky: {
-    icon: "text-sky-300 border-sky-400/25 bg-sky-500/10",
-    glow: "from-sky-500/20",
+    icon: "text-sky-200 light:text-sky-700 border-sky-400/35 bg-sky-500/15",
+    glow: "from-sky-500/30",
     bar: "bg-sky-400",
   },
   violet: {
-    icon: "text-violet-300 border-violet-400/25 bg-violet-500/10",
-    glow: "from-violet-500/20",
-    bar: "bg-violet-400",
+    icon: "text-fuchsia-200 light:text-fuchsia-700 border-fuchsia-400/35 bg-fuchsia-500/15",
+    glow: "from-fuchsia-500/30",
+    bar: "bg-fuchsia-400",
   },
 };
 
@@ -139,7 +139,7 @@ export function StatCard({
           <span
             className={cn(
               "inline-flex shrink-0 items-center gap-0.5 text-[10px] font-medium",
-              trend.positive === false ? "text-rose-300" : "text-emerald-300",
+              trend.positive === false ? "text-rose-300 light:text-rose-700" : "text-emerald-300 light:text-emerald-700",
             )}
           >
             {trend.direction === "up" ? (

@@ -238,7 +238,7 @@ export function RemediationDesk({ initialApplication }: { initialApplication: Ap
             <CardContent className="space-y-2">
               <AnimatePresence initial={false}>
                 {application.deficiencies.length === 0 ? (
-                  <p className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 text-xs text-muted-foreground">
+                  <p className="rounded-xl border border-white/10 bg-white/[0.04] p-4 text-xs text-muted-foreground">
                     No deficiencies recorded against this application.
                   </p>
                 ) : null}
@@ -263,14 +263,14 @@ export function RemediationDesk({ initialApplication }: { initialApplication: Ap
                             className={cn(
                               "flex items-center gap-1.5 text-[11px] font-medium",
                               deficiency.isResolved
-                                ? "text-emerald-200 line-through decoration-emerald-400/40"
+                                ? "text-emerald-200 light:text-emerald-700 line-through decoration-emerald-400/40"
                                 : "text-foreground",
                             )}
                           >
                             {deficiency.isResolved ? (
                               <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
                             ) : (
-                              <AlertTriangle className="h-3.5 w-3.5 text-amber-300" />
+                              <AlertTriangle className="h-3.5 w-3.5 text-amber-300 light:text-amber-700" />
                             )}
                             {deficiency.title}
                           </p>
@@ -282,7 +282,7 @@ export function RemediationDesk({ initialApplication }: { initialApplication: Ap
                               Required <span className="text-foreground">{deficiency.requiredValue}</span>
                             </span>
                             <span className="text-muted-foreground">
-                              Declared <span className="text-rose-300">{deficiency.actualValue}</span>
+                              Declared <span className="text-rose-300 light:text-rose-700">{deficiency.actualValue}</span>
                             </span>
                           </div>
                         </div>
@@ -388,7 +388,7 @@ export function RemediationDesk({ initialApplication }: { initialApplication: Ap
               </div>
             </div>
 
-            <div className="space-y-3 border-t border-white/[0.06] pt-4">
+            <div className="space-y-3 border-t border-white/10 pt-4">
               <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                 <Ruler className="h-3 w-3" /> Infrastructure & resources
               </p>
@@ -414,7 +414,7 @@ export function RemediationDesk({ initialApplication }: { initialApplication: Ap
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/[0.07] bg-white/[0.02] p-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/[0.07] bg-white/[0.04] p-3">
               <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
                 <Ruler className="h-3 w-3" />
                 Live index
@@ -488,7 +488,7 @@ function ReadOnlyStat({
   value: string;
 }) {
   return (
-    <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-2.5 py-2">
+    <div className="rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-2">
       <p className="flex items-center gap-1 text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
         <Icon className="h-2.5 w-2.5" /> {label}
       </p>

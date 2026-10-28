@@ -208,7 +208,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
                 className={cn(
                   "shrink-0 rounded-lg border px-2 py-1 text-[9px] font-medium transition-colors",
                   filter === item.key
-                    ? "border-indigo-400/40 bg-indigo-500/15 text-indigo-200"
+                    ? "border-violet-400/40 bg-violet-500/15 text-violet-100 light:text-violet-700"
                     : "border-white/[0.07] text-muted-foreground hover:text-foreground",
                 )}
               >
@@ -220,7 +220,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
         </CardHeader>
         <CardContent className="scrollbar-none max-h-[620px] space-y-1.5 overflow-y-auto pt-2">
           {filtered.length === 0 ? (
-            <p className="rounded-xl border border-white/[0.06] p-4 text-center text-[10px] text-muted-foreground">
+            <p className="rounded-xl border border-white/10 p-4 text-center text-[10px] text-muted-foreground">
               No files match this filter.
             </p>
           ) : null}
@@ -240,8 +240,8 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
                   className={cn(
                     "w-full rounded-xl border p-2.5 text-left transition-all",
                     isSelected
-                      ? "border-indigo-400/40 bg-indigo-500/[0.09]"
-                      : "border-white/[0.06] bg-white/[0.015] hover:border-white/15 hover:bg-white/[0.035]",
+                      ? "border-violet-400/40 bg-violet-500/[0.09]"
+                      : "border-white/10 bg-white/[0.03] hover:border-white/15 hover:bg-white/[0.035]",
                   )}
                 >
                   <div className="flex items-start justify-between gap-1.5">
@@ -258,7 +258,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
                   <div className="mt-1.5 flex flex-wrap items-center gap-1">
                     <StateBadge state={application.currentState} dot={false} className="px-1.5 py-0 text-[9px]" />
                     {open > 0 ? (
-                      <span className="rounded-full border border-rose-400/25 bg-rose-500/10 px-1.5 text-[9px] text-rose-300">
+                      <span className="rounded-full border border-rose-400/25 bg-rose-500/10 px-1.5 text-[9px] text-rose-300 light:text-rose-700">
                         {open} gap{open > 1 ? "s" : ""}
                       </span>
                     ) : null}
@@ -335,7 +335,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
                       </thead>
                       <tbody>
                         {selected.formData.programs.map((program) => (
-                          <tr key={program.id} className="border-t border-white/[0.05]">
+                          <tr key={program.id} className="border-t border-white/10">
                             <td className="px-3 py-2 text-foreground">{program.name}</td>
                             <td className="px-3 py-2 text-muted-foreground">{program.degree}</td>
                             <td className="px-3 py-2 text-right tabular-nums text-foreground">
@@ -343,7 +343,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
                             </td>
                             <td className="px-3 py-2 text-right">
                               {program.accredited ? (
-                                <span className="text-emerald-300">Yes</span>
+                                <span className="text-emerald-300 light:text-emerald-700">Yes</span>
                               ) : (
                                 <span className="text-muted-foreground">No</span>
                               )}
@@ -357,7 +357,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
                   <div>
                     <div className="mb-2 flex items-center justify-between">
                       <p className="flex items-center gap-1.5 text-xs font-medium text-foreground">
-                        <FileText className="h-3.5 w-3.5 text-indigo-300" /> Evidence dossier
+                        <FileText className="h-3.5 w-3.5 text-violet-200 light:text-violet-700" /> Evidence dossier
                       </p>
                       <span className="text-[9px] text-muted-foreground">
                         {verifiedFor(selected.id).length}/{selected.formData.documents.length} verified
@@ -374,7 +374,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
                               "rounded-xl border transition-colors",
                               verified
                                 ? "border-emerald-400/20 bg-emerald-400/[0.03]"
-                                : "border-white/[0.07] bg-white/[0.02]",
+                                : "border-white/[0.07] bg-white/[0.04]",
                             )}
                           >
                             <button
@@ -411,7 +411,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
                                   initial={{ height: 0, opacity: 0 }}
                                   animate={{ height: "auto", opacity: 1 }}
                                   exit={{ height: 0, opacity: 0 }}
-                                  className="overflow-hidden border-t border-white/[0.06]"
+                                  className="overflow-hidden border-t border-white/10"
                                 >
                                   <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2">
                                     <p className="text-[10px] text-muted-foreground">
@@ -443,14 +443,14 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
                     <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                       <CalendarClock className="h-3 w-3" /> Audit trail
                     </p>
                     <div className="mt-2 space-y-1.5">
                       {selected.auditLogs.slice(-4).reverse().map((entry) => (
                         <div key={entry.id} className="flex items-start gap-2 text-[10px]">
-                          <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-indigo-400" />
+                          <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-violet-400" />
                           <div className="min-w-0">
                             <p className="text-muted-foreground">
                               <span className="text-foreground">{entry.actorName}</span> →{" "}
@@ -485,7 +485,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-sm">
-                <ShieldCheck className="h-4 w-4 text-emerald-300" /> Live rule verdict
+                <ShieldCheck className="h-4 w-4 text-emerald-300 light:text-emerald-700" /> Live rule verdict
               </CardTitle>
               <CardDescription>
                 Recalculated from the submitted JSON payload.
@@ -505,7 +505,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
 
               {openDeficiencies.length > 0 ? (
                 <div className="rounded-xl border border-amber-400/25 bg-amber-400/[0.05] p-3">
-                  <p className="flex items-center gap-1.5 text-[10px] font-medium text-amber-200">
+                  <p className="flex items-center gap-1.5 text-[10px] font-medium text-amber-200 light:text-amber-700">
                     <FileWarning className="h-3 w-3" /> {openDeficiencies.length} open notice(s)
                   </p>
                   <ul className="mt-1.5 space-y-1">
@@ -523,7 +523,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-sm">
-                <Gavel className="h-4 w-4 text-indigo-300" /> Scrutiny actions
+                <Gavel className="h-4 w-4 text-violet-200 light:text-violet-700" /> Scrutiny actions
               </CardTitle>
               <CardDescription>
                 Transitions are validated against the workflow graph and your role.
@@ -543,7 +543,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
                     variant="secondary"
                     onClick={() => openDialog("flag")}
                   >
-                    <FileWarning className="h-4 w-4 text-amber-300" /> Flag deficiency
+                    <FileWarning className="h-4 w-4 text-amber-300 light:text-amber-700" /> Flag deficiency
                   </Button>
                   <Button className="w-full" onClick={() => transition("EVC_INSPECTION")} loading={pending}>
                     <Landmark className="h-4 w-4" /> Schedule EVC inspection
@@ -582,8 +582,8 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
                   className={cn(
                     "rounded-xl border p-3 text-[10px] leading-relaxed",
                     selected.currentState === "APPROVED"
-                      ? "border-emerald-400/25 bg-emerald-400/[0.05] text-emerald-200"
-                      : "border-rose-400/25 bg-rose-500/[0.05] text-rose-200",
+                      ? "border-emerald-400/25 bg-emerald-400/[0.05] text-emerald-200 light:text-emerald-700"
+                      : "border-rose-400/25 bg-rose-500/[0.05] text-rose-200 light:text-rose-700",
                   )}
                 >
                   {selected.decisionNotes ?? "Final decision recorded."}
@@ -596,7 +596,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
                 </p>
               ) : null}
 
-              <div className="mt-1 flex items-center justify-between rounded-lg border border-white/[0.06] bg-white/[0.02] px-2.5 py-1.5 text-[9px] text-muted-foreground">
+              <div className="mt-1 flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-1.5 text-[9px] text-muted-foreground">
                 <span className="inline-flex items-center gap-1">
                   <BookOpen className="h-3 w-3" /> {evaluation.totalRules} rules evaluated
                 </span>
@@ -627,7 +627,7 @@ export function ReviewerDesk({ initialApplications }: { initialApplications: App
           </DialogHeader>
 
           {dialog?.type === "flag" && evaluation ? (
-            <div className="mb-3 max-h-40 space-y-1.5 overflow-y-auto rounded-xl border border-white/[0.07] bg-white/[0.02] p-2.5">
+            <div className="mb-3 max-h-40 space-y-1.5 overflow-y-auto rounded-xl border border-white/[0.07] bg-white/[0.04] p-2.5">
               {evaluation.deficiencies.length === 0 ? (
                 <p className="text-[10px] text-muted-foreground">
                   Automated validation passes all rules. Flagging manually will still create a
@@ -705,7 +705,7 @@ function Metric({
   value: string;
 }) {
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5">
+    <div className="rounded-xl border border-white/10 bg-white/[0.04] p-2.5">
       <p className="flex items-center gap-1 text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
         <Icon className="h-2.5 w-2.5" /> {label}
       </p>
