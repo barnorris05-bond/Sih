@@ -55,7 +55,7 @@ const PORTALS = [
   },
 ];
 
-export default function LandingPage() {
+function LandingPage() {
   const analytics = buildAnalytics();
   const { kpis } = analytics;
 
@@ -290,6 +290,8 @@ export default function LandingPage() {
     </div>
   );
 }
+
+export default LandingPage;
 
 function ButtonLike({
   children,

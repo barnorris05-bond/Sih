@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -33,7 +33,22 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const navItems = user ? NAV_BY_ROLE[user.role] : [];
+  const landing = pathname === "/";
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 18);
+      const maximum = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(maximum > 0 ? Math.min(1, window.scrollY / maximum) : 0);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); };
+  }, []);
 
   async function handleSignOut() {
     setSigningOut(true);
@@ -144,7 +159,8 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
                 type="button"
                 onClick={() => setMobileOpen((open) => !open)}
                 className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/[0.04] text-muted-foreground md:hidden"
-                aria-label="Toggle navigation"
+                aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+                aria-expanded={mobileOpen}
               >
                 {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
               </button>
@@ -175,6 +191,7 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
           )}
         </div>
       </div>
+      {landing ? <motion.div className="mx-auto mt-1 h-px w-full max-w-[1200px] origin-left rounded-full bg-gradient-to-r from-[#A7A5F5] via-[#F2BFE0] to-[#C8E5F8]" animate={{ scaleX: scrollProgress }} transition={{ duration: .12, ease: "linear" }} aria-hidden="true" /> : null}
 
       <AnimatePresence>
         {mobileOpen ? (
