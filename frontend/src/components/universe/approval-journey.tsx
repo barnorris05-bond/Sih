@@ -648,9 +648,14 @@ export function ApprovalJourney() {
               <span className="uj-rule" /> Veridion <em>AICTE Approval Cloud</em>
             </p>
             <h1 className="uj-h1">
-              Every approval,
-              <br />
-              <span className="text-gradient">traced end to end.</span>
+              <span className="uj-line">
+                <span className="uj-line-in">Every approval,</span>
+              </span>
+              <span className="uj-line">
+                <span className="uj-line-in">
+                  <span className="text-gradient">traced end to end.</span>
+                </span>
+              </span>
             </h1>
             <p className="uj-lede">
               One connected record for declaration, handbook validation, scrutiny, remediation, inspection and the final decision, with

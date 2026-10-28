@@ -137,6 +137,34 @@
   letter-spacing: -0.045em;
   color: #faf7ff;
 }
+/* Headline entrance: each line rises through its own clip edge, staggered, easing out. Pure CSS, so it
+   plays on every full page load, is already in its hidden start state on first paint (fill-mode both),
+   keeps no stored state, and runs once. The clip region is padded so ascenders and descenders are never
+   cut, and it adds no layout (the lines keep their exact height). */
+.uj-line {
+  display: block;
+  clip-path: inset(-0.12em -0.25em -0.24em -0.25em);
+}
+.uj-line-in {
+  display: block;
+  animation: uj-line-rise 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+.uj-line:nth-child(2) .uj-line-in {
+  animation-delay: 0.34s;
+}
+@keyframes uj-line-rise {
+  from {
+    transform: translateY(135%);
+  }
+  to {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .uj-line-in {
+    animation: none;
+  }
+}
 .uj-h2 {
   margin-top: 0.7rem;
   font-family: "Space Grotesk", Inter, "Segoe UI", system-ui, sans-serif;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -186,11 +186,12 @@ export function RemediationDesk({ initialApplication }: { initialApplication: Ap
   return (
     <div className="space-y-4">
       <Card className={cn("overflow-hidden", passed ? "border-emerald-400/25" : "border-amber-400/25")}>
-        <CardContent className="grid gap-4 pt-5 md:grid-cols-[auto_1fr_auto] md:items-center">
+        <CardContent className="grid gap-x-5 gap-y-4 pt-5 md:grid-cols-[auto_minmax(0,1fr)] md:items-center lg:grid-cols-[auto_minmax(0,1fr)_minmax(14rem,17rem)]">
           <ComplianceGauge
             score={evaluation.score}
-            size={128}
+            size={144}
             strokeWidth={9}
+            compactText
             showRules={{ passed: evaluation.passedRules, total: evaluation.totalRules }}
           />
           <div className="min-w-0">
@@ -214,26 +215,28 @@ export function RemediationDesk({ initialApplication }: { initialApplication: Ap
               across attempts; nothing is silently overwritten.
             </p>
           </div>
-          <div className="min-w-[190px] space-y-2">
+          <div className="space-y-2 md:col-span-2 lg:col-span-1">
             <SlaCountdown deadline={nextDeadline ?? application.slaDeadline} label="Remediation SLA" />
-            <p className="text-right text-[9px] text-muted-foreground">
+            <p className="text-right text-[10px] text-muted-foreground">
               Notice issued {formatDate(application.updatedAt)}
             </p>
           </div>
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
-        <div className="space-y-3">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+        <div className="min-w-0 space-y-3">
           <Card>
-            <CardHeader className="flex-row items-start justify-between">
-              <div>
+            <CardHeader className="flex-row flex-wrap items-start justify-between gap-x-3 gap-y-2">
+              <div className="min-w-0 flex-1 basis-[12rem]">
                 <CardTitle>Show-cause notice</CardTitle>
                 <CardDescription>
                   Rule-level evidence issued by the scrutiny desk.
                 </CardDescription>
               </div>
-              <Badge variant="danger">{openDeficiencies.length} open</Badge>
+              <Badge variant="danger" className="shrink-0 whitespace-nowrap">
+                {openDeficiencies.length} open
+              </Badge>
             </CardHeader>
             <CardContent className="space-y-2">
               <AnimatePresence initial={false}>
@@ -261,16 +264,16 @@ export function RemediationDesk({ initialApplication }: { initialApplication: Ap
                         <div className="min-w-0">
                           <p
                             className={cn(
-                              "flex items-center gap-1.5 text-[11px] font-medium",
+                              "flex items-start gap-1.5 text-[11px] font-medium leading-snug",
                               deficiency.isResolved
                                 ? "text-emerald-200 line-through decoration-emerald-400/40"
                                 : "text-foreground",
                             )}
                           >
                             {deficiency.isResolved ? (
-                              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                              <CheckCircle2 className="mt-px h-3.5 w-3.5 shrink-0 text-emerald-400" />
                             ) : (
-                              <AlertTriangle className="h-3.5 w-3.5 text-amber-300" />
+                              <AlertTriangle className="mt-px h-3.5 w-3.5 shrink-0 text-amber-300" />
                             )}
                             {deficiency.title}
                           </p>
@@ -288,7 +291,7 @@ export function RemediationDesk({ initialApplication }: { initialApplication: Ap
                         </div>
                         <span
                           className={cn(
-                            "shrink-0 rounded-full border px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-wider",
+                            "shrink-0 rounded-full border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider",
                             style.className,
                           )}
                         >
@@ -296,14 +299,14 @@ export function RemediationDesk({ initialApplication }: { initialApplication: Ap
                         </span>
                       </div>
                       <div className="mt-2 flex items-center justify-between gap-2">
-                        <span className="font-mono text-[8px] text-muted-foreground/60">
+                        <span className="min-w-0 break-all font-mono text-[10px] text-muted-foreground/70">
                           {deficiency.ruleCode}
                         </span>
                         <button
                           type="button"
                           onClick={() => toggleResolved(deficiency)}
                           disabled={togglingId === deficiency.id}
-                          className="inline-flex items-center gap-1 rounded-md border border-white/10 px-1.5 py-0.5 text-[9px] text-muted-foreground transition-colors hover:border-white/25 hover:text-foreground disabled:opacity-50"
+                          className="inline-flex shrink-0 items-center gap-1 rounded-md border border-white/10 px-2 py-1 text-[10px] text-muted-foreground transition-colors hover:border-white/25 hover:text-foreground disabled:opacity-50"
                         >
                           {togglingId === deficiency.id ? (
                             <Loader2 className="h-2.5 w-2.5 animate-spin" />
@@ -317,7 +320,7 @@ export function RemediationDesk({ initialApplication }: { initialApplication: Ap
               </AnimatePresence>
 
               {resolvedDeficiencies.length > 0 ? (
-                <p className="pt-1 text-[9px] text-muted-foreground">
+                <p className="pt-1 text-[10px] text-muted-foreground">
                   {resolvedDeficiencies.length} previously resolved item(s) retained in the audit
                   trail.
                 </p>
@@ -335,15 +338,15 @@ export function RemediationDesk({ initialApplication }: { initialApplication: Ap
           </Card>
         </div>
 
-        <Card>
-          <CardHeader className="flex-row items-start justify-between">
-            <div>
+        <Card className="min-w-0">
+          <CardHeader className="flex-row flex-wrap items-start justify-between gap-x-3 gap-y-2">
+            <div className="min-w-0 flex-1 basis-[14rem]">
               <CardTitle>Correct the declaration</CardTitle>
               <CardDescription>
                 Update the metrics your notice relates to. Totals recalculate instantly.
               </CardDescription>
             </div>
-            <Button type="button" size="sm" variant="secondary" onClick={applyMinimums}>
+            <Button type="button" size="sm" variant="secondary" onClick={applyMinimums} className="shrink-0">
               <Wand2 className="h-3.5 w-3.5" /> Apply minimums
             </Button>
           </CardHeader>
@@ -439,7 +442,7 @@ export function RemediationDesk({ initialApplication }: { initialApplication: Ap
               </div>
             </div>
 
-            <p className="text-[9px] leading-relaxed text-muted-foreground">
+            <p className="text-[10px] leading-relaxed text-muted-foreground">
               <BookOpen className="mr-1 inline h-3 w-3" />
               Resubmission moves the file back to <span className="text-foreground">Submitted</span>{" "}
               and restarts the 48-hour scrutiny SLA. If any rule still fails, a fresh notice is
@@ -463,17 +466,21 @@ function MetricInput({
   onChange: (value: number) => void;
   hint?: string;
 }) {
+  const inputId = useId();
   return (
-    <div>
-      <Label className="mb-1 block text-[10px]">{label}</Label>
+    <div className="min-w-0">
+      <Label htmlFor={inputId} className="mb-1 block text-[10px]">
+        {label}
+      </Label>
       <Input
+        id={inputId}
         type="number"
         min={0}
         value={Number.isFinite(value) ? value : 0}
         onChange={(event) => onChange(event.target.valueAsNumber)}
         className="h-9 text-xs"
       />
-      {hint ? <p className="mt-1 text-[9px] text-muted-foreground">{hint}</p> : null}
+      {hint ? <p className="mt-1 text-[10px] text-muted-foreground">{hint}</p> : null}
     </div>
   );
 }
@@ -489,8 +496,8 @@ function ReadOnlyStat({
 }) {
   return (
     <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-2.5 py-2">
-      <p className="flex items-center gap-1 text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
-        <Icon className="h-2.5 w-2.5" /> {label}
+      <p className="flex items-center gap-1 text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+        <Icon className="h-2.5 w-2.5 shrink-0" /> {label}
       </p>
       <p className="mt-0.5 text-[11px] font-medium text-foreground">{value}</p>
     </div>
