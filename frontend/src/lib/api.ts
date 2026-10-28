@@ -12,18 +12,51 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(url: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(url, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(init?.headers ?? {}),
-    },
-    cache: "no-store",
-  });
+/** No request should leave the UI waiting indefinitely. */
+const REQUEST_TIMEOUT_MS = 20_000;
 
-  const text = await response.text();
-  const payload = text ? (JSON.parse(text) as unknown) : null;
+async function request<T>(url: string, init?: RequestInit, timeoutMs = REQUEST_TIMEOUT_MS): Promise<T> {
+  const controller = new AbortController();
+  let timedOut = false;
+  const timer = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, timeoutMs);
+  // Honour a caller-supplied signal (e.g. an unmounted component) as well as our own timeout.
+  init?.signal?.addEventListener("abort", () => controller.abort(), { once: true });
+
+  let response: Response;
+  let text: string;
+  try {
+    response = await fetch(url, {
+      ...init,
+      signal: controller.signal,
+      headers: {
+        "Content-Type": "application/json",
+        ...(init?.headers ?? {}),
+      },
+      cache: "no-store",
+    });
+    text = await response.text();
+  } catch (error) {
+    if (timedOut) {
+      throw new ApiError("The server took too long to respond. Please try again.", 408, "TIMEOUT");
+    }
+    if (init?.signal?.aborted) throw error;
+    throw new ApiError("Could not reach the server. Check your connection and try again.", 0, "NETWORK");
+  } finally {
+    clearTimeout(timer);
+  }
+
+  // Proxies and crashes can answer with HTML or an empty body; never let a parse error escape raw.
+  let payload: unknown = null;
+  if (text) {
+    try {
+      payload = JSON.parse(text) as unknown;
+    } catch {
+      payload = null;
+    }
+  }
 
   if (!response.ok) {
     const errorPayload = payload as { error?: string; code?: string } | null;
@@ -32,6 +65,9 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
       response.status,
       errorPayload?.code ?? "REQUEST_FAILED",
     );
+  }
+  if (text && payload === null) {
+    throw new ApiError("The server sent an unexpected response. Please try again.", response.status, "BAD_RESPONSE");
   }
 
   return payload as T;

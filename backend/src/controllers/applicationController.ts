@@ -5,6 +5,7 @@ import {
   SLA_HOURS,
   STATE_META,
   type Application,
+  type ApplicationSummary,
   type ApplicationFormData,
   type ApplicationState,
   type AuditLog,
@@ -22,6 +23,8 @@ import {
   mutateDatabase,
   type DatabaseShape,
 } from "../store/database";
+import { resolveScope, scopedApplications } from "../security/access";
+import { appInScope } from "../security/scope";
 
 export class WorkflowError extends Error {
   readonly status: number;
@@ -109,8 +112,18 @@ function assertInstitutionAccess(actor: Actor, app: Application): void {
   }
 }
 
-function assertCanView(actor: Actor, app: Application): void {
-  assertInstitutionAccess(actor, app);
+/**
+ * Single gate for reading or acting on one application. Out-of-scope regional officers (and anyone with
+ * no scope) get the same 404 as a record that does not exist, so a guessed or leaked id reveals nothing.
+ * Institution users keep their existing 403 for another institution's record.
+ */
+function assertInScope(session: SessionPayload, app: Application): void {
+  const scope = resolveScope(session);
+  if (appInScope(scope, app)) return;
+  if (scope.kind === "institution") {
+    throw new WorkflowError("This application belongs to another institution.", 403, "FORBIDDEN");
+  }
+  throw new WorkflowError("Application not found.", 404, "NOT_FOUND");
 }
 
 function buildDeficiencies(app: Application, formData: ApplicationFormData): Deficiency[] {
@@ -137,20 +150,23 @@ function buildDeficiencies(app: Application, formData: ApplicationFormData): Def
 }
 
 export function listApplications(session: SessionPayload): Application[] {
-  const actor = actorFrom(session);
-  const db = getDatabase();
-  const scoped =
-    actor.role === "INSTITUTION_USER" && actor.institutionId
-      ? db.applications.filter((app) => app.institutionId === actor.institutionId)
-      : db.applications;
-  return [...scoped].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  return [...scopedApplications(resolveScope(session))].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+}
+
+/** Drops the heavy form payload and audit trail; see {@link ApplicationSummary}. */
+export function summarizeApplication(app: Application): ApplicationSummary {
+  const { formData: _formData, auditLogs: _auditLogs, ...summary } = app;
+  return summary;
+}
+
+export function listApplicationSummaries(session: SessionPayload): ApplicationSummary[] {
+  return listApplications(session).map(summarizeApplication);
 }
 
 export function getApplication(session: SessionPayload, id: string): Application {
-  const actor = actorFrom(session);
   const app = findApplication(id);
   if (!app) throw new WorkflowError("Application not found.", 404, "NOT_FOUND");
-  assertCanView(actor, app);
+  assertInScope(session, app);
   return app;
 }
 
@@ -188,11 +204,11 @@ function institutionDraft(session: SessionPayload): Application | null {
   );
 }
 
-export function saveDraft(
+export async function saveDraft(
   session: SessionPayload,
   formData: Partial<ApplicationFormData>,
   applicationId?: string,
-): Application {
+): Promise<Application> {
   const actor = actorFrom(session);
   if (actor.role !== "INSTITUTION_USER" || !actor.institutionId) {
     throw new WorkflowError("Only institution users can draft applications.", 403, "FORBIDDEN");
@@ -257,12 +273,12 @@ export function saveDraft(
   });
 }
 
-function submitInternal(
+async function submitInternal(
   session: SessionPayload,
   formData: ApplicationFormData,
   applicationId: string | undefined,
   resubmission: boolean,
-): Application {
+): Promise<Application> {
   const actor = actorFrom(session);
   if (actor.role !== "INSTITUTION_USER" || !actor.institutionId) {
     throw new WorkflowError("Only institution users can submit applications.", 403, "FORBIDDEN");
@@ -403,7 +419,7 @@ export function submitApplication(
   session: SessionPayload,
   formData: ApplicationFormData,
   applicationId?: string,
-): Application {
+): Promise<Application> {
   return submitInternal(session, formData, applicationId, false);
 }
 
@@ -411,7 +427,7 @@ export function resubmitApplication(
   session: SessionPayload,
   applicationId: string,
   formData: ApplicationFormData,
-): Application {
+): Promise<Application> {
   return submitInternal(session, formData, applicationId, true);
 }
 
@@ -420,11 +436,11 @@ export interface TransitionInput {
   notes?: string;
 }
 
-export function transitionApplication(
+export async function transitionApplication(
   session: SessionPayload,
   applicationId: string,
   input: TransitionInput,
-): Application {
+): Promise<Application> {
   const actor = actorFrom(session);
   if (actor.role === "INSTITUTION_USER") {
     throw new WorkflowError(
@@ -437,6 +453,8 @@ export function transitionApplication(
   return mutateDatabase((db) => {
     const app = db.applications.find((item) => item.id === applicationId);
     if (!app) throw new WorkflowError("Application not found.", 404, "NOT_FOUND");
+    // Scope is checked before the state machine so a denied caller learns nothing about the record.
+    assertInScope(session, app);
 
     validateStateTransition(app.currentState, input.target, actor.role);
     const previous = app.currentState;
@@ -515,12 +533,12 @@ function defaultNote(target: ApplicationState): string {
   }
 }
 
-export function resolveDeficiency(
+export async function resolveDeficiency(
   session: SessionPayload,
   applicationId: string,
   deficiencyId: string,
   resolved: boolean,
-): Application {
+): Promise<Application> {
   const actor = actorFrom(session);
   if (actor.role !== "INSTITUTION_USER") {
     throw new WorkflowError("Only institutions can resolve their deficiencies.", 403, "FORBIDDEN");
@@ -543,18 +561,18 @@ export function institutionApplications(session: SessionPayload): Application[] 
   return listApplications(session);
 }
 
-export function pipelineSnapshot(): {
+export function pipelineSnapshot(session: SessionPayload): {
   byState: Record<string, number>;
   overdue: Application[];
 } {
-  const db: DatabaseShape = getDatabase();
+  const applications = scopedApplications(resolveScope(session));
   const byState: Record<string, number> = {};
-  for (const app of db.applications) {
+  for (const app of applications) {
     byState[app.currentState] = (byState[app.currentState] ?? 0) + 1;
   }
   return {
     byState,
-    overdue: db.applications.filter(
+    overdue: applications.filter(
       (app) =>
         app.escalated &&
         app.currentState !== "APPROVED" &&

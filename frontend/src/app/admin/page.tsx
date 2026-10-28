@@ -5,9 +5,11 @@ import { ROLE_META } from "@aicte/shared";
 import {
   ensurePlatformRuntime,
   getAnalytics,
+  getEventFeed,
   getSlaQueue,
-  listApplications,
-  recentEvents,
+  listApplicationSummaries,
+  resolveScope,
+  summarizeApplication,
 } from "@aicte/backend";
 import { CommandCenter } from "@/components/admin/command-center";
 import { PageShell } from "@/components/layout/page-shell";
@@ -28,10 +30,11 @@ export default async function AdminPage() {
   }
 
   ensurePlatformRuntime();
-  const analytics = getAnalytics();
-  const applications = listApplications(session);
-  const events = recentEvents(50);
-  const slaQueue = getSlaQueue(10);
+  const scope = resolveScope(session);
+  const analytics = getAnalytics(session);
+  const applications = listApplicationSummaries(session);
+  const events = getEventFeed(session, 50);
+  const slaQueue = getSlaQueue(session, 10).map(summarizeApplication);
   const canDecide = session.role === "AICTE_ADMIN";
 
   return (
@@ -46,7 +49,7 @@ export default async function AdminPage() {
           </Badge>
           <Badge variant="neutral">
             <Landmark className="mr-1 h-3 w-3" />
-            {session.role === "AICTE_ADMIN" ? "National scope" : "Regional scope"}
+            {scope.kind === "region" ? `${scope.region} region` : session.role === "AICTE_ADMIN" ? "National scope" : "No region assigned"}
           </Badge>
           <Badge variant="indigo">{session.name}</Badge>
         </>
@@ -59,7 +62,7 @@ export default async function AdminPage() {
         slaQueue={slaQueue}
         canDecide={canDecide}
         actorName={session.name}
-        scopeLabel={session.role === "AICTE_ADMIN" ? "National" : "Regional"}
+        scopeLabel={scope.kind === "region" ? `${scope.region} region` : session.role === "AICTE_ADMIN" ? "National" : "No region assigned"}
       />
     </PageShell>
   );

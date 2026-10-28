@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
+import { timed } from "@/lib/api-server";
 import { SESSION_COOKIE } from "@aicte/shared";
 
 export const dynamic = "force-dynamic";
 
-export async function POST() {
+export const POST = timed("auth.logout", async () => {
   const response = NextResponse.json({ ok: true });
   response.cookies.set({
     name: SESSION_COOKIE,
@@ -15,4 +16,4 @@ export async function POST() {
     maxAge: 0,
   });
   return response;
-}
+});

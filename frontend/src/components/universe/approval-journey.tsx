@@ -619,7 +619,7 @@ export function ApprovalJourney() {
   };
 
   return (
-    <section id="workflow" ref={rootRef} className="uj-root" aria-label="AICTE approval workflow journey">
+    <section id="workflow" ref={rootRef} className="uj-root" aria-label="Veridion approval workflow journey">
       <div className="uj-stage">
         <div className="uj-bg" aria-hidden="true">
           <div data-u="glow-hero" className="uj-glow-hero" />
@@ -645,7 +645,7 @@ export function ApprovalJourney() {
         <div className="uj-hero" data-j="hero">
           <div className="uj-hero-inner">
             <p className="uj-eyebrow">
-              <span className="uj-rule" /> AICTE Approval Cloud <em>SIH26262</em>
+              <span className="uj-rule" /> Veridion <em>AICTE Approval Cloud</em>
             </p>
             <h1 className="uj-h1">
               Every approval,

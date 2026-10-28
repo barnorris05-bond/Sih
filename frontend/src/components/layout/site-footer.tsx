@@ -11,9 +11,10 @@ export function SiteFooter() {
             <ShieldCheck className="h-3.5 w-3.5 text-indigo-300" />
           </span>
           <div>
-            <p className="text-xs font-medium text-foreground">AICTE Approval Workflow & Compliance Platform</p>
+            <p className="text-xs font-medium text-foreground">Veridion · AICTE Approval Cloud</p>
+            <p className="mt-0.5 text-[10px] text-muted-foreground">Every requirement. Every stage. One clear path.</p>
             <p className="mt-0.5 text-[10px] text-muted-foreground">
-              SIH26262 prototype · Rule book {ruleBook.version} · Effective {ruleBook.effectiveFrom}
+              Integrated AICTE Approval Workflow Automation, Compliance Monitoring and Alert Management System · SIH26262 prototype · Rule book {ruleBook.version} · Effective {ruleBook.effectiveFrom}
             </p>
           </div>
         </div>

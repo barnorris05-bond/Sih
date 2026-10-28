@@ -86,10 +86,10 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
           </motion.span>
           <span className="leading-tight">
             <span className="block whitespace-nowrap font-display text-sm font-semibold tracking-tight text-foreground">
-              AICTE Approval Cloud
+              Veridion
             </span>
             <span className={cn("hidden overflow-hidden whitespace-nowrap text-[9px] sm:block font-medium uppercase tracking-[0.22em] text-muted-foreground transition-all duration-500", compact ? "max-h-0 opacity-0" : "max-h-4 opacity-100")}>
-              Workflow · Compliance
+              AICTE Approval Cloud
             </span>
           </span>
         </Link>

@@ -10,14 +10,20 @@ import { getSession } from "@/lib/session";
 
 export const metadata: Metadata = {
   title: {
-    default: "AICTE Approval Cloud · Workflow & Compliance Automation",
-    template: "%s · AICTE Approval Cloud",
+    default: "Veridion · AICTE Approval Cloud",
+    template: "%s · Veridion",
   },
   description:
-    "Rule-driven AICTE approval workflow automation: live compliance scoring, state machine scrutiny, SLA escalation and executive analytics.",
-  applicationName: "AICTE Approval Cloud",
+    "Veridion: every requirement, every stage, one clear path. AICTE Approval Cloud: rule-driven approval workflow automation with live compliance scoring, scrutiny, SLA escalation and executive analytics.",
+  applicationName: "Veridion",
   authors: [{ name: "SIH26262 Team" }],
-  keywords: ["AICTE", "approval", "compliance", "workflow", "SIH26262"],
+  keywords: ["Veridion", "AICTE", "approval", "compliance", "workflow", "SIH26262"],
+  openGraph: {
+    type: "website",
+    siteName: "Veridion",
+    title: "Veridion · AICTE Approval Cloud",
+    description: "Every requirement. Every stage. One clear path.",
+  },
 };
 
 export const viewport: Viewport = {

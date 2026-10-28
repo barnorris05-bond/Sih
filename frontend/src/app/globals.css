@@ -168,7 +168,7 @@
   }
 
   .text-gradient {
-    background: linear-gradient(120deg, var(--landing-pastel-lavender) 0%, var(--landing-periwinkle) 36%, var(--landing-soft-pink) 72%, var(--landing-ice-blue) 100%);
+    background: linear-gradient(120deg, var(--landing-pastel-lavender, #d5c8ff) 0%, var(--landing-periwinkle, #a7a5f5) 36%, var(--landing-soft-pink, #f2bfe0) 72%, var(--landing-ice-blue, #c8e5f8) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

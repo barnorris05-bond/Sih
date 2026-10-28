@@ -24,8 +24,8 @@ import {
 import {
   ensurePlatformRuntime,
   getAuditFeed,
+  getEventFeed,
   listApplications,
-  recentEvents,
 } from "@aicte/backend";
 import { ComplianceGauge } from "@/components/dashboard/compliance-gauge";
 import { SlaCountdown } from "@/components/dashboard/sla-countdown";
@@ -78,13 +78,13 @@ export default async function InstitutionDashboard() {
   );
 
   const applicationIds = new Set(applicationsList.map((application) => application.id));
-  const events = recentEvents(40).filter(
+  const events = getEventFeed(session, 40).filter(
     (event) => event.applicationId && applicationIds.has(event.applicationId),
   );
   const feed =
     events.length > 0
       ? events
-      : getAuditFeed(8)
+      : getAuditFeed(session, 8)
           .filter((item) => applicationIds.has(item.applicationId))
           .map((item) => ({
             id: item.id,

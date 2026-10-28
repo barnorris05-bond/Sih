@@ -1,4 +1,4 @@
-import { ensurePlatformRuntime, subscribeToEvents } from "@aicte/backend";
+import { ensurePlatformRuntime, eventVisible, resolveScope, subscribeToEvents } from "@aicte/backend";
 import { apiError } from "@/lib/api-server";
 import { getSession } from "@/lib/session";
 
@@ -9,6 +9,8 @@ export async function GET(request: Request) {
   const session = await getSession();
   if (!session) return apiError("Sign in to continue.", 401, "UNAUTHENTICATED");
   ensurePlatformRuntime();
+  // Events name institutions, so each stream only carries what this user may see (same rules as the lists).
+  const scope = resolveScope(session);
 
   const encoder = new TextEncoder();
   let cleanup: (() => void) | undefined;
@@ -27,7 +29,7 @@ export async function GET(request: Request) {
       send(`data: ${JSON.stringify({ type: "ping" })}\n\n`);
 
       const unsubscribe = subscribeToEvents((event) => {
-        send(`data: ${JSON.stringify(event)}\n\n`);
+        if (eventVisible(scope, event)) send(`data: ${JSON.stringify(event)}\n\n`);
       });
 
       const heartbeat = setInterval(() => {
