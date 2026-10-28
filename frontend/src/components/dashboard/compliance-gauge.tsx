@@ -14,6 +14,8 @@ interface ComplianceGaugeProps {
   sublabel?: string;
   className?: string;
   showRules?: { passed: number; total: number };
+  /** Smaller, tighter inner text for rings under ~160px, so captions stay inside the ring. */
+  compactText?: boolean;
 }
 
 export function ComplianceGauge({
@@ -24,6 +26,7 @@ export function ComplianceGauge({
   sublabel,
   className,
   showRules,
+  compactText = false,
 }: ComplianceGaugeProps) {
   const gradientId = useId().replace(/:/g, "");
   const reduce = useReducedMotion();
@@ -73,15 +76,23 @@ export function ComplianceGauge({
         <div className="flex items-baseline justify-center gap-0.5">
           <CountUp
             value={safeScore}
-            className="font-display text-4xl font-semibold tabular-nums tracking-tight text-foreground"
+            className={cn(
+              "font-display font-semibold tabular-nums tracking-tight text-foreground",
+              compactText ? "text-3xl" : "text-4xl",
+            )}
           />
           <span className="text-sm font-medium text-muted-foreground">%</span>
         </div>
-        <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+        <p
+          className={cn(
+            "mt-1 font-medium uppercase text-muted-foreground",
+            compactText ? "text-[9px] tracking-[0.1em]" : "text-[10px] tracking-[0.18em]",
+          )}
+        >
           {label}
         </p>
         {showRules ? (
-          <p className="mt-1 text-[10px] text-muted-foreground/80">
+          <p className={cn("mt-1 text-muted-foreground/80", compactText ? "text-[9px]" : "text-[10px]")}>
             {showRules.passed}/{showRules.total} rules cleared
           </p>
         ) : sublabel ? (

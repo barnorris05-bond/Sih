@@ -103,7 +103,7 @@ export function SlaCountdown({ deadline, className, compact = false, label }: Sl
         className,
       )}
     >
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
         <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
           {label ?? "SLA window"}
         </span>
