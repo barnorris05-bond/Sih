@@ -1,5 +1,5 @@
 import type { PublicUser } from "@aicte/shared";
-import { verifyPassword } from "../auth/password";
+import { verifyPasswordAsync } from "../auth/password";
 import {
   findInstitution,
   findUserByEmail,
@@ -16,14 +16,15 @@ export function toPublicUser(record: UserRecord): PublicUser {
     role: record.role,
     institutionId: record.institutionId,
     institutionName: institution?.name ?? null,
+    region: record.role === "REGIONAL_OFFICER" ? (record.region ?? null) : undefined,
     createdAt: record.createdAt,
   };
 }
 
-export function authenticate(email: string, password: string): PublicUser | null {
+export async function authenticate(email: string, password: string): Promise<PublicUser | null> {
   const record = findUserByEmail(email.trim());
   if (!record) return null;
-  if (!verifyPassword(password, record.passwordHash)) return null;
+  if (!(await verifyPasswordAsync(password, record.passwordHash))) return null;
   return toPublicUser(record);
 }
 

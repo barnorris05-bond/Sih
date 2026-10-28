@@ -22,7 +22,7 @@ import {
 import {
   STATE_META,
   type AnalyticsSnapshot,
-  type Application,
+  type ApplicationSummary,
   type ApplicationState,
   type PlatformEvent,
 } from "@aicte/shared";
@@ -33,7 +33,7 @@ import {
   RegionalChart,
   SlaStackedChart,
   StateDistributionDonut,
-} from "@/components/dashboard/charts";
+} from "@/components/dashboard/lazy-charts";
 import { SlaCountdown } from "@/components/dashboard/sla-countdown";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { StateBadge } from "@/components/dashboard/state-badge";
@@ -50,9 +50,9 @@ import { cn, formatNumber, relativeTime } from "@/lib/utils";
 
 interface CommandCenterProps {
   analytics: AnalyticsSnapshot;
-  applications: Application[];
+  applications: ApplicationSummary[];
   events: PlatformEvent[];
-  slaQueue: Application[];
+  slaQueue: ApplicationSummary[];
   canDecide: boolean;
   actorName: string;
   scopeLabel: string;
@@ -98,14 +98,14 @@ export function CommandCenter({
     [rows],
   );
 
-  const applyUpdate = useCallback((application: Application) => {
+  const applyUpdate = useCallback((application: ApplicationSummary) => {
     setRows((current) =>
       current.map((entry) => (entry.id === application.id ? application : entry)),
     );
   }, []);
 
   const decide = useCallback(
-    async (application: Application, target: ApplicationState, note: string) => {
+    async (application: ApplicationSummary, target: ApplicationState, note: string) => {
       setPendingId(application.id);
       try {
         const { application: updated } = await api.transition(application.id, target, note);
@@ -138,7 +138,7 @@ export function CommandCenter({
     [applyUpdate, router, toast],
   );
 
-  function quickAdvance(application: Application) {
+  function quickAdvance(application: ApplicationSummary) {
     const target = NEXT_STAGE[application.currentState];
     if (!target) return;
     if (target === "APPROVED" && !canDecide) {
@@ -211,7 +211,7 @@ export function CommandCenter({
             <div>
               <CardTitle>National pipeline</CardTitle>
               <CardDescription>
-                Live snapshot of the approval funnel across every region.
+                Live snapshot of the approval funnel{scopeLabel === "National" ? " across every region" : ` · ${scopeLabel}`}.
               </CardDescription>
             </div>
             <div className="flex items-center gap-2 text-[10px] text-muted-foreground">

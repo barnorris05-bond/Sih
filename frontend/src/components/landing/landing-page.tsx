@@ -4,8 +4,7 @@ import { buildAnalytics } from "@aicte/backend";
 import { ROLE_META, ruleBook } from "@aicte/shared";
 import { ComplianceGauge } from "@/components/dashboard/compliance-gauge";
 import { FadeIn, StaggerGroup, StaggerItem } from "@/components/animations/fade-in";
-import { ApprovalUniverseHero } from "@/components/landing/approval-universe-hero";
-import { WorkflowStory } from "@/components/landing/workflow-story";
+import { ApprovalJourney } from "@/components/universe/approval-journey";
 import { CapabilityStory } from "@/components/landing/capability-story";
 import { HandbookExplorer } from "@/components/landing/handbook-explorer";
 import { MilestoneTimeline } from "@/components/landing/milestone-timeline";
@@ -20,10 +19,8 @@ const PORTALS = [
 
 export function LandingPage() {
   const { kpis } = buildAnalytics();
-  return <div className="landing-page min-h-full overflow-hidden">
-    <ApprovalUniverseHero />
-    <section aria-label="Platform capabilities" className="border-y border-white/[0.06] bg-white/[0.018]"><div className="mx-auto grid w-full max-w-[1440px] gap-6 px-4 py-9 sm:px-6 lg:grid-cols-[1fr_2fr] lg:items-center lg:px-8"><FadeIn><p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-indigo-300/80">Operational clarity</p><p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">A shared workflow for the people who prepare, scrutinise, remediate, inspect and decide.</p></FadeIn><div className="grid gap-3 sm:grid-cols-3">{["Structured submissions", "Rule-level findings", "Auditable transitions"].map((item, index) => <div key={item} className="flex items-center gap-2 rounded-xl border border-white/[0.07] bg-white/[0.025] px-3 py-3 text-xs text-foreground"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-emerald-400/10 text-emerald-300"><CheckCircle2 className="h-3.5 w-3.5" /></span><span><span className="block font-medium">{item}</span><span className="text-[10px] text-muted-foreground">{index === 0 ? "Complete before review" : index === 1 ? "Evidence-backed" : "Actor and timestamp"}</span></span></div>)}</div></div></section>
-    <WorkflowStory />
+  return <div className="landing-page min-h-full overflow-x-clip">
+    <ApprovalJourney />
     <CapabilityStory />
     <NarrativeBridge />
     <MilestoneTimeline />

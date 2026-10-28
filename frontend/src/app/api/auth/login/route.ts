@@ -1,23 +1,42 @@
 import { NextResponse } from "next/server";
 import { SESSION_COOKIE } from "@aicte/shared";
-import { authenticate, createSessionToken, ensurePlatformRuntime } from "@aicte/backend";
-import { handleRouteError } from "@/lib/api-server";
+import { accountKey, authenticate, createSessionToken, ensurePlatformRuntime, loginLimiters } from "@aicte/backend";
+import { apiError, clientAddress, handleRouteError, readJsonBody, timed } from "@/lib/api-server";
 import { loginSchema } from "@/lib/validation";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request: Request) {
+export const POST = timed("auth.login", async (request: Request) => {
   try {
     ensurePlatformRuntime();
-    const credentials = loginSchema.parse(await request.json());
-    const user = authenticate(credentials.email, credentials.password);
+    const credentials = loginSchema.parse(await readJsonBody(request));
+
+    // Failed-attempt throttle (successful sign-ins are never counted). The per-account counter does not
+    // depend on any client-supplied value; the per-source counter exists only behind a trusted proxy.
+    const account = accountKey(credentials.email);
+    const source = clientAddress(request);
+    const { perAccount, perSource } = loginLimiters();
+    const blocked = [perAccount.check(account), source ? perSource.check(source) : null].find((d) => d && !d.allowed);
+    if (blocked) {
+      return apiError(
+        "Too many failed sign-in attempts. Please wait a few minutes and try again.",
+        429,
+        "RATE_LIMITED",
+        { "Retry-After": String(blocked.retryAfterSeconds) },
+      );
+    }
+
+    const user = await authenticate(credentials.email, credentials.password);
 
     if (!user) {
+      perAccount.recordFailure(account);
+      if (source) perSource.recordFailure(source);
       return NextResponse.json(
         { error: "Incorrect email or password.", code: "INVALID_CREDENTIALS" },
         { status: 401 },
       );
     }
+    perAccount.reset(account);
 
     const token = await createSessionToken({
       sub: user.id,
@@ -42,4 +61,4 @@ export async function POST(request: Request) {
   } catch (error) {
     return handleRouteError(error);
   }
-}
+});

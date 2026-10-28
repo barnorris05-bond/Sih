@@ -1,6 +1,12 @@
-# AICTE Approval Cloud
+# Veridion
 
-**AICTE Approval Workflow & Compliance Automation Platform** — SIH26262.
+*Every requirement. Every stage. One clear path.*
+
+**AICTE Approval Cloud**
+
+Formal SIH title: **Integrated AICTE Approval Workflow Automation, Compliance Monitoring and Alert Management System** — SIH26262.
+
+> Veridion is the working name of a Smart India Hackathon prototype. It is not an official AICTE product and is not affiliated with or endorsed by AICTE, and no trademark is claimed.
 
 A production-shaped full-stack prototype that turns the AICTE Approval Process Handbook into
 executable rules: applications score themselves as institutions type, scrutiny runs on a guarded
@@ -48,6 +54,35 @@ Open <http://localhost:3000>.
 
 > The demo store is written to `backend/.data/db.json`. Delete it (or run `npm run reset:data`)
 > to regenerate the exact seeded dataset. All timestamps are generated relative to first boot.
+
+### Data scope, durability and rate limiting
+
+**Who sees what.** Admins and scrutiny members see every application. Institution users see only their
+own institution's. A **regional officer** sees only applications whose institution is registered in the
+officer's assigned region: the `region` field on the officer's *user record* (one of the `REGIONS`),
+read on the server for every request. Nothing from a request body, query string or URL can widen it,
+and an officer with no valid assignment has no data scope at all (deny by default). The same scope
+applies to lists, single-record reads, transitions, analytics, the audit feed, the SLA queue and the live
+event stream; out-of-scope records answer `404`, exactly like a record that does not exist. The demo
+officer is assigned the region of the demo institution (North) in the seed. *Policy decision for the
+operator:* which region each real officer covers, and whether regional officers should see
+nation-wide aggregates, is not defined by this repository; assign `region` on the user record.
+
+**Durability.** Business writes (drafts, submissions, resubmissions, transitions, deficiency updates)
+are acknowledged only after the snapshot containing them has been written and atomically renamed: an
+acknowledged change survives the process being killed. Concurrent writers share one write (group
+commit). If the write fails (after quick retries) the change is rolled back, the caller gets
+`503 PERSISTENCE_FAILED` (safe to retry), and no event is published for it. Set `AICTE_FSYNC=1` to also
+survive an OS crash or power loss (about +1 ms per write). On a read-only filesystem (serverless) the store
+is memory-only: writes succeed but are not durable, and responses carry `X-Durability: memory-only`.
+The single JSON file is for the zero-infrastructure demo; use the PostgreSQL path for real deployments.
+
+**Rate limiting.** Failed sign-ins are throttled per account (8 per 5 minutes) regardless of where they
+come from. A per-source limit (30 per 5 minutes) is added **only** when `AICTE_TRUSTED_PROXY_HOPS` tells
+the app how many trusted reverse proxies sit in front of it (for example `1` on Vercel or behind one load
+balancer); the client address is then the `X-Forwarded-For` entry that many positions from the right.
+Without that setting forwarded headers are ignored, because any client can forge them. Limits are
+in-memory per process.
 
 ---
 

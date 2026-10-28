@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { ensurePlatformRuntime, listApplications } from "@aicte/backend";
-import { handleRouteError, apiError } from "@/lib/api-server";
+import { handleRouteError, apiError, timed } from "@/lib/api-server";
 import { getSession } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export const GET = timed("applications.list", async () => {
   try {
     const session = await getSession();
     if (!session) return apiError("Sign in to continue.", 401, "UNAUTHENTICATED");
@@ -14,4 +14,4 @@ export async function GET() {
   } catch (error) {
     return handleRouteError(error);
   }
-}
+});

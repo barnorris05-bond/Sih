@@ -4,8 +4,9 @@ import type {
   ApplicationState,
   PlatformEvent,
 } from "@aicte/shared";
+import type { SessionPayload } from "@aicte/shared";
 import { buildAnalytics } from "../engines/analytics";
-import { getDatabase, recentEvents } from "../store/database";
+import { resolveScope, scopedApplications, visibleEvents } from "../security/access";
 
 export interface AuditFeedItem {
   id: string;
@@ -20,14 +21,13 @@ export interface AuditFeedItem {
   timestamp: string;
 }
 
-export function getAnalytics(): AnalyticsSnapshot {
-  return buildAnalytics();
+export function getAnalytics(session: SessionPayload): AnalyticsSnapshot {
+  return buildAnalytics(scopedApplications(resolveScope(session)));
 }
 
-export function getAuditFeed(limit = 24): AuditFeedItem[] {
-  const db = getDatabase();
+export function getAuditFeed(session: SessionPayload, limit = 24): AuditFeedItem[] {
   const feed: AuditFeedItem[] = [];
-  for (const application of db.applications) {
+  for (const application of scopedApplications(resolveScope(session))) {
     for (const audit of application.auditLogs) {
       feed.push({
         id: audit.id,
@@ -46,9 +46,8 @@ export function getAuditFeed(limit = 24): AuditFeedItem[] {
   return feed.sort((a, b) => b.timestamp.localeCompare(a.timestamp)).slice(0, limit);
 }
 
-export function getSlaQueue(limit = 12): Application[] {
-  const db = getDatabase();
-  return db.applications
+export function getSlaQueue(session: SessionPayload, limit = 12): Application[] {
+  return scopedApplications(resolveScope(session))
     .filter(
       (app) =>
         app.slaDeadline !== null &&
@@ -62,6 +61,6 @@ export function getSlaQueue(limit = 12): Application[] {
     .slice(0, limit);
 }
 
-export function getEventFeed(limit = 30): PlatformEvent[] {
-  return recentEvents(limit);
+export function getEventFeed(session: SessionPayload, limit = 30): PlatformEvent[] {
+  return visibleEvents(resolveScope(session), limit);
 }

@@ -147,6 +147,11 @@ export interface User {
   name: string;
   role: Role;
   institutionId: string | null;
+  /**
+   * Region a REGIONAL_OFFICER is responsible for (one of REGIONS). Assigned server-side on the user
+   * record; an officer without a valid assignment has no data scope. Ignored for other roles.
+   */
+  region?: string | null;
   createdAt: string;
 }
 
@@ -171,6 +176,13 @@ export interface Application {
   createdAt: string;
   updatedAt: string;
 }
+
+/**
+ * What list views (the executive command center) actually render. Omits the declared form payload and
+ * the audit trail, which are ~80% of an application's serialized size and never read there.
+ * A full {@link Application} is structurally assignable to this type.
+ */
+export type ApplicationSummary = Omit<Application, "formData" | "auditLogs">;
 
 export interface Deficiency {
   id: string;

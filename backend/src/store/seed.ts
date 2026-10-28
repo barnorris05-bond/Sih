@@ -402,6 +402,9 @@ export function createSeedDatabase(): DatabaseShape {
       name: "Kavita Nair",
       role: "REGIONAL_OFFICER",
       institutionId: null,
+      // Demo fixture: the officer covers the region of the demo institution (index 0). Real
+      // assignments are an operational decision; see the regional-scope notes in the README.
+      region: institutions[0]?.region ?? null,
       createdAt: isoDaysAgo(260),
       passwordHash,
     },

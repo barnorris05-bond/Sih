@@ -9,6 +9,8 @@ import { ROLE_META, type SessionPayload } from "@aicte/shared";
 import { ThemeToggle } from "@/components/providers/theme-provider";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
+import { journeyStore, useJourney } from "@/lib/journey-store";
+import { STAGES } from "@/components/universe/stages";
 import { cn, initials } from "@/lib/utils";
 
 const NAV_BY_ROLE: Record<SessionPayload["role"], Array<{ href: string; label: string }>> = {
@@ -37,6 +39,8 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const navItems = user ? NAV_BY_ROLE[user.role] : [];
   const landing = pathname === "/";
+  const journey = useJourney();
+  const compact = landing && scrolled;
 
   useEffect(() => {
     const onScroll = () => {
@@ -69,8 +73,8 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
   }
 
   return (
-    <header className={cn("sticky top-0 z-40 px-3 pt-3 transition-all duration-300 sm:px-5", scrolled ? (landing ? "bg-[#171329]/75" : "bg-background/60") : "bg-transparent")}>
-      <div className={cn("mx-auto flex h-14 w-full max-w-[1200px] items-center justify-between gap-4 rounded-2xl border px-3 transition-all duration-300 sm:px-4", scrolled ? (landing ? "border-fuchsia-200/20 bg-[#171329]/92 shadow-[0_18px_60px_-32px_rgba(118,103,200,0.45)] backdrop-blur-xl" : "border-white/[0.12] bg-background/85 shadow-[0_18px_60px_-32px_rgba(15,23,42,0.95)] backdrop-blur-xl") : (landing ? "border-white/[0.1] bg-[#171329]/60 backdrop-blur-md" : "border-white/[0.06] bg-background/45 backdrop-blur-md"))}>
+    <header className={cn("z-40 px-3 pt-3 transition-all duration-300 sm:px-5", landing ? "pointer-events-none fixed inset-x-0 top-0" : "sticky top-0", scrolled && !landing ? "bg-background/60" : "bg-transparent")}>
+      <div className={cn("pointer-events-auto mx-auto flex w-full items-center justify-between gap-4 rounded-2xl border px-3 transition-all duration-500 ease-out sm:px-4", compact ? "h-12 max-w-[940px]" : "h-14 max-w-[1200px]", scrolled ? (landing ? "border-fuchsia-200/20 bg-[#171329]/92 shadow-[0_18px_60px_-32px_rgba(118,103,200,0.45)] backdrop-blur-xl" : "border-white/[0.12] bg-background/85 shadow-[0_18px_60px_-32px_rgba(15,23,42,0.95)] backdrop-blur-xl") : (landing ? "border-white/[0.1] bg-[#171329]/60 backdrop-blur-md" : "border-white/[0.06] bg-background/45 backdrop-blur-md"))}>
         <Link href={user ? ROLE_META[user.role].home : "/"} className="group flex items-center gap-2.5">
           <motion.span
             whileHover={{ rotate: -6, scale: 1.04 }}
@@ -81,11 +85,11 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
             <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/25" />
           </motion.span>
           <span className="leading-tight">
-            <span className="block font-display text-sm font-semibold tracking-tight text-foreground">
-              AICTE Approval Cloud
+            <span className="block whitespace-nowrap font-display text-sm font-semibold tracking-tight text-foreground">
+              Veridion
             </span>
-            <span className="block text-[9px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
-              Workflow · Compliance
+            <span className={cn("hidden overflow-hidden whitespace-nowrap text-[9px] sm:block font-medium uppercase tracking-[0.22em] text-muted-foreground transition-all duration-500", compact ? "max-h-0 opacity-0" : "max-h-4 opacity-100")}>
+              AICTE Approval Cloud
             </span>
           </span>
         </Link>
@@ -115,10 +119,29 @@ export function SiteHeader({ user }: { user: SessionPayload | null }) {
             ))}
           </nav>
         ) : (
-          <nav className="hidden items-center gap-6 text-xs text-muted-foreground md:flex">
-            <a href="#workflow" className="transition-colors hover:text-foreground">
+          <nav aria-label="Primary" className="hidden items-center gap-4 whitespace-nowrap text-xs text-muted-foreground md:flex lg:gap-6">
+            <a
+              href="#workflow"
+              aria-current={landing && journey.inJourney ? "location" : undefined}
+              onClick={(event) => {
+                if (landing && journeyStore.goToStage) {
+                  event.preventDefault();
+                  journeyStore.goToStage(0);
+                }
+              }}
+              className={cn("relative transition-colors hover:text-foreground", landing && journey.inJourney && "text-foreground")}
+            >
               Workflow
+              {landing && journey.inJourney ? (
+                <span className="absolute -bottom-1.5 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#F2BFE0] to-transparent" />
+              ) : null}
             </a>
+            {landing && journey.inJourney ? (
+              <span className="flex items-center gap-2 whitespace-nowrap rounded-full border border-[#F2BFE0]/25 bg-[#F2BFE0]/[0.07] px-2.5 py-1 font-mono text-[10px] tracking-wider text-[#F8DDEB]" aria-live="polite">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#F2BFE0] shadow-[0_0_8px_#F2BFE0]" />
+                {String(journey.stage + 1).padStart(2, "0")} · {STAGES[journey.stage]?.label}
+              </span>
+            ) : null}
             <a href="#portals" className="transition-colors hover:text-foreground">
               Portals
             </a>

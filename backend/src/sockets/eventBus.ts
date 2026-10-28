@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 import { randomUUID } from "node:crypto";
 import type { PlatformEvent } from "@aicte/shared";
-import { pushEvent } from "../store/database";
+import { afterCommit, pushEvent } from "../store/database";
 
 const globalForBus = globalThis as unknown as { __aicteBus?: EventEmitter };
 
@@ -34,10 +34,16 @@ export function createEvent(input: NewEventInput): PlatformEvent {
   };
 }
 
-/** Persists the event and fans it out to every connected dashboard stream. */
+/**
+ * Persists the event and fans it out to every connected dashboard stream. Fan-out waits for the
+ * snapshot containing the event to be committed, so subscribers are never told about a change that is
+ * later rolled back (and a failed write publishes nothing).
+ */
 export function publishEvent(event: PlatformEvent): PlatformEvent {
   pushEvent(event);
-  bus().emit("platform-event", event);
+  afterCommit(() => {
+    bus().emit("platform-event", event);
+  });
   return event;
 }
 

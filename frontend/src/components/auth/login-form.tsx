@@ -133,7 +133,7 @@ export function LoginForm({ initialRole, next }: { initialRole: DemoRole; next?:
         className="relative"
       >
         <span className="inline-flex items-center gap-2 rounded-full border border-indigo-400/25 bg-indigo-500/[0.08] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-indigo-200">
-          <Sparkles className="h-3 w-3" /> Secure role gateway
+          <Sparkles className="h-3 w-3" /> Veridion · Secure role gateway
         </span>
         <h1 className="mt-5 max-w-lg font-display text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-[2.6rem]">
           One workspace for every

@@ -13,10 +13,11 @@
     "start": "npm run start -w @aicte/frontend",
     "seed": "npm run seed -w @aicte/backend",
     "typecheck": "npm run typecheck -w @aicte/backend && npm run typecheck -w @aicte/frontend",
-    "reset:data": "node -e \"require('fs').rmSync('backend/.data',{recursive:true,force:true})\""
+    "reset:data": "node -e \"require('fs').rmSync('backend/.data',{recursive:true,force:true})\"",
+    "test": "node --import tsx --test \"backend/tests/*.test.ts\" \"frontend/tests/*.test.ts\""
   },
   "engines": {
-    "node": ">=18.17"
+    "node": ">=22"
   },
   "devDependencies": {
     "vercel": "65.4.0"

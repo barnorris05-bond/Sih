@@ -136,9 +136,11 @@ function buildDeficiencyBreakdown(applications: Application[]) {
     .sort((a, b) => b.count - a.count);
 }
 
-export function buildAnalytics(): AnalyticsSnapshot {
-  const db = getDatabase();
-  const applications = db.applications;
+/**
+ * Aggregates over `applications`. The default (every application) is only for the public landing page,
+ * which shows a single dataset-wide average; authenticated callers must pass their scoped list.
+ */
+export function buildAnalytics(applications: Application[] = getDatabase().applications): AnalyticsSnapshot {
 
   const approved = applications.filter((app) => app.currentState === "APPROVED").length;
   const rejected = applications.filter((app) => app.currentState === "REJECTED").length;

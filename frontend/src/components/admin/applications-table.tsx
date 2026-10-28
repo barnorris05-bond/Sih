@@ -11,7 +11,7 @@ import {
   type SortingState,
 } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, ArrowUpDown, CheckCircle2, ExternalLink, Eye } from "lucide-react";
-import { APPLICATION_STATES, type Application, type ApplicationState } from "@aicte/shared";
+import { APPLICATION_STATES, type ApplicationState, type ApplicationSummary } from "@aicte/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input, Select } from "@/components/ui/input";
@@ -20,9 +20,9 @@ import { SlaCountdown } from "@/components/dashboard/sla-countdown";
 import { cn } from "@/lib/utils";
 
 interface ApplicationsTableProps {
-  applications: Application[];
+  applications: ApplicationSummary[];
   canDecide: boolean;
-  onApprove: (application: Application) => void;
+  onApprove: (application: ApplicationSummary) => void;
   pendingId: string | null;
 }
 
@@ -49,7 +49,7 @@ export function ApplicationsTable({
     });
   }, [applications, search, stateFilter]);
 
-  const columns = useMemo<Array<ColumnDef<Application>>>(
+  const columns = useMemo<Array<ColumnDef<ApplicationSummary>>>(
     () => [
       {
         id: "institution",
